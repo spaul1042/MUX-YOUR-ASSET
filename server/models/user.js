@@ -12,7 +12,6 @@ const collateralSchema = new mongoose.Schema({
 })
 
 const userSchema = new mongoose.Schema({
-    
     account_address: {
         required: true,
         type: String
@@ -23,7 +22,7 @@ const userSchema = new mongoose.Schema({
     },
     password:{
         required:true,
-        type:Strinf
+        type:String
     },
     collateral:{
         required:false,

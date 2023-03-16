@@ -125,7 +125,7 @@ router.post("/lend", async (req, res) => {
 
         // updating the object
         await Loan.updateOne(
-          { loan_id: req.body.laon_id },
+          { loan_id: req.body.loan_id },
           { $set: { funders: new_funders } }
         );
       }
@@ -139,35 +139,34 @@ router.post("/lend", async (req, res) => {
 
 // API Endpoint for signing in and creating an object in the user Model
 // >> {account_address, name, password, collateral(empty array)}
-// C)
+// C)  Tested Working
 
 router.post("/signin", async (req, res) => {
   try {
     // 5) Updating the User Model
 
-    User.findOne(
-      {
-        account_address: req.body.account_address,
-      },
-      async function (err, user) {
-        if (err) {
-          console.log(err);
-          res.status(400).json({ message: err.message });
-        } else if (!user) {
+    const query5 = User.findOne({
+      account_address: req.body.account_address,
+    });
+    query5
+      .then((user) => {
+        if (!user) {
           // create a new User object
-          const user = new User({
+          const new_user = new User({
             account_address: req.body.account_address,
             name: req.body.name,
             password: req.body.password,
             collateral: [],
           });
-          await user.save();
+          new_user.save();
           res.status(201).json({ message: "success" });
         } else {
           res.status(400).json({ message: "User already exists" });
         }
-      }
-    );
+      })
+      .catch((err) => {
+        res.status(400).json({ message: err.message });
+      });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -180,20 +179,17 @@ router.post("/signin", async (req, res) => {
 router.post("/deposit_collateral", async (req, res) => {
   try {
     // 5) Updating the User Model
+    // Find the user using findOne query then use call back functions (.then , .catch)
 
-    User.findOne(
-      {
-        account_address: req.body.account_address,
-      },
-      async function (err, user) {
-        if (err) {
-          console.log(err);
-          res.status(400).json({ message: err.message });
-        } else if (!user) {
+    const query6 = User.findOne({
+      account_address: req.body.account_address,
+    });
+      query6.then( async (user) => {
+        if (!user) {
           res.status(400).json({ message: "User not found" });
         } else {
           // Update the collateral array of the user
-          const new_collateral = user.collateral;
+          let new_collateral = user.collateral;
           new_collateral.push({
             currency_code: req.body.currency_code,
             collateral_amount: req.body.collateral_amount,
@@ -206,16 +202,15 @@ router.post("/deposit_collateral", async (req, res) => {
           );
           res.status(201).json({ message: "success" });
         }
-      }
-    );
+      })
+      .catch((err) => {
+        res.status(400).json({ message: err.message });
+      });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-
-
-// GET Requests 
-
+// GET Requests
 
 module.exports = router;
