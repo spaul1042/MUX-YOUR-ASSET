@@ -34,7 +34,7 @@ function NavBar() {
     const appinfo = await sdk.ping();
     const request = {
       "TransactionType": "Payment",
-      "Account": "rph8nukqhbkdRLk2L7XcrzM49uMgMNm47M",
+      "Destination": "rph8nukqhbkdRLk2L7XcrzM49uMgMNm47M",
       "Amount": "10000",
       "Memos": [
         {
@@ -44,10 +44,14 @@ function NavBar() {
         }
       ]
     }
-    
+
     const payload = await sdk.payload.create(request, true)
 
-    console.log(payload)
+    // console.log(payload)
+    alert("Click Ok to get the qr code for signing transactions");
+    alert(payload.refs.qr_png);
+    console.log(payload.refs.qr_png)
+
     setAppName(appinfo.application.name);
   };
 
