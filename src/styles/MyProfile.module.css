@@ -1,0 +1,31 @@
+.container {
+  margin: 2rem;
+}
+
+.title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+
+.button1 {
+  display: inline-block;
+  margin:10px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button1:hover {
+  background-color: #0061d1;
+}
+
+.div2{
+  margin:15px;
+}

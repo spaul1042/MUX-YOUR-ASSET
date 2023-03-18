@@ -8,6 +8,8 @@ function NavBar() {
   const [loading, setloading] = useState(false);
   const [appname, setAppName] = useState("App Name ?");
   const [balances , setBalances] = useState([0, 0]);
+  const [connected, setConnected] = useState(false);
+
   // const [res, setRes] = useState();
 
   const [xumm, setXumm] = useState();
@@ -17,21 +19,22 @@ function NavBar() {
   // }, []);
 
   const connect = async function () {
-    // '',
-    // setloading(true);
     const xumm = new Xumm("9f7539a1-f077-4098-8fee-dfc371769a15", {
       implicit: true, // Implicit: allows to e.g. move from social browser to stock browser
       // redirectUrl: document.location.href + '?custom_state=test'
     });
     await xumm.authorize().catch((e) => console.log("e", e));
-    // setloading(false);
+    setConnected(true);
   };
+
   const payload = async function () {
     const sdk = new Xumm(
       "9f7539a1-f077-4098-8fee-dfc371769a15",
       "5bb59cad-d471-4d0f-8c06-b0463a78eeff"
     );
+
     const appinfo = await sdk.ping();
+
     const request = {
       "TransactionType": "Payment",
       "Destination": "rph8nukqhbkdRLk2L7XcrzM49uMgMNm47M",
@@ -76,7 +79,7 @@ function NavBar() {
             <Link href="/borrow">Borrow</Link>
           </li>
           <li>
-            <Link href="/">My Profile</Link>
+            <Link href="/myprofile">My Profile</Link>
           </li>
           <li>
             <div className={styles.connectbtn}>
