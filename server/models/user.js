@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { hashTrustline } = require('xrpl/dist/npm/utils/hashes');
 
 const collateralSchema = new mongoose.Schema({
     currency_code:{
@@ -25,7 +26,7 @@ const userSchema = new mongoose.Schema({
         type:String
     },
     collateral:{
-        required:false,
+        required:true,
         type:[collateralSchema]
     }
 

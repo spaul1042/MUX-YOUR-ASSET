@@ -34,8 +34,12 @@ const loanSchema = new mongoose.Schema({
         type: Number
     },
     funders:{
-        required:false,
+        required:true,
         type:[fundersSchema]
+    },
+    collateral_currency_code:{
+        required:true,
+        type:String
     }
 })
 
