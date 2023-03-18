@@ -110,7 +110,8 @@ router.post("/borrow", async (req, res) => {
 // B) tested >> Working
 
 router.post("/lend", async (req, res) => {
-  try{  // ends at 209
+  try {
+    // ends at 209
     // 3) Updating the Loan Model
     const query3 = Loan.findOne({
       _id: req.body.loan_id,
@@ -120,10 +121,11 @@ router.post("/lend", async (req, res) => {
       .then((loan) => {
         if (!loan) {
           res.status(400).json({ message: "Loan Id is not valid" });
-        } else {  // ends at 207
+        } else {
+          // ends at 207
           let new_loan_amount = loan.loan_amount;
           new_loan_amount -= req.body.funding_amount;
-          
+
           let new_funders = loan.funders;
           let present = false;
           let index_present = -1;
@@ -134,9 +136,10 @@ router.post("/lend", async (req, res) => {
               break;
             }
           }
-          
+
           if (present) {
-            new_funders[index_present].funding_amount += req.body.funding_amount;
+            new_funders[index_present].funding_amount +=
+              req.body.funding_amount;
           } else {
             new_funders.push({
               funder_address: req.body.account_address,
@@ -144,7 +147,7 @@ router.post("/lend", async (req, res) => {
             });
           }
 
-          // updating the object 147- 206 
+          // updating the object 147- 206
           Loan.updateOne(
             { _id: req.body.loan_id },
             { $set: { funders: new_funders, loan_amount: new_loan_amount } }
@@ -153,8 +156,8 @@ router.post("/lend", async (req, res) => {
             const query4 = Lender.findOne({
               account_address: req.body.account_address,
             });
-    
-            query4  // 157 -205
+
+            query4 // 157 -205
               .then(async (lender) => {
                 if (!lender) {
                   // the lender has placed a lend request for the first time
@@ -164,7 +167,7 @@ router.post("/lend", async (req, res) => {
                       funding_amount: req.body.funding_amount,
                     },
                   ];
-    
+
                   // creating the object
                   const new_lender = new Lender({
                     account_address: req.body.account_address,
@@ -184,14 +187,15 @@ router.post("/lend", async (req, res) => {
                     }
                   }
                   if (present) {
-                    new_funded_loans[index_present].funding_amount += req.body.funding_amount;
+                    new_funded_loans[index_present].funding_amount +=
+                      req.body.funding_amount;
                   } else {
                     new_funded_loans.push({
                       loan_id: req.body.loan_id,
                       funding_amount: req.body.funding_amount,
                     });
                   }
-    
+
                   // updating the object
                   await Lender.updateOne(
                     { account_address: req.body.account_address },
@@ -203,15 +207,13 @@ router.post("/lend", async (req, res) => {
               .catch((err) => {
                 res.status(400).json({ message: err.message });
               });
-        })
-  } 
-  })
-}
-  catch (err) {
+          });
+        }
+      });
+  } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
-
 
 // API Endpoint for signing in and creating an object in the user Model
 // >> {account_address, name, password, collateral(empty array)}
@@ -305,5 +307,16 @@ router.post("/deposit_collateral", async (req, res) => {
 });
 
 // GET Requests
+router.get("/loans", async (req, res) => {
+  const query7 = Loan.find({});
+
+  query7
+    .then((loans) => {
+      res.status(201).json({ active_loans: loans });
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+});
 
 module.exports = router;

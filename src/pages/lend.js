@@ -1,11 +1,12 @@
 import styles from "@/styles/Lend.module.css";
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
+import loan from "../../server/models/loan";
+
+// Note that here borrowers refer to loans >> Bcz a lender a going to fund a loan
 
 export default function Lend() {
   const [loading, setloading] = useState(true);
-
-  const [account_address, setAddress] = useState("demo");
 
   const [borrowers, setBorrowers] = useState([]);
   const [selectedBorrowers, setSelectedBorrowers] = useState([]);
@@ -21,14 +22,19 @@ export default function Lend() {
   };
 
   useEffect(() => {
-    
-    setloading(false);
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/borrowers")
-      .then((response) => response.json())
-      .then((data) => setBorrowers(data));
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/loans');
+        const data = await response.json();
+        setBorrowers(data.active_loans);
+        console.log("Success");
+      } catch (error) {
+        console.log("Error:", error);
+      } finally {
+        setloading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   if (loading) {
@@ -53,10 +59,13 @@ export default function Lend() {
                     {borrower.account_address}
                   </span>
                   <span className={styles.amount}>
-                    {borrower.borrowing_amount} XRD Tokens
+                    {borrower.loan_amount} {borrower.currency_code} Tokens
                   </span>
                   <span className={styles.amount}>
-                    {borrower.interest_rate} %
+                    {borrower.interest_rate} % for {borrower.loan_duration} months
+                  </span>
+                  <span className={styles.amount}>
+                    Collateral Staked in {borrower.collateral_currency_code}
                   </span>
                   <button
                     className={`${styles.toggleButton} ${
