@@ -22,14 +22,10 @@ function NavBar() {
   };
 
   const payload = async function () {
-    const sdk = new Xumm(
-      "9f7539a1-f077-4098-8fee-dfc371769a15",
-      "e93cfbfe-6968-4f9b-bb33-e0bebfe2ce76"
+    const xumm = new Xumm(
+      "9f7539a1-f077-4098-8fee-dfc371769a15"
     );
-    // 9f7539a1-f077-4098-8fee-dfc371769a15
-    // e93cfbfe-6968-4f9b-bb33-e0bebfe2ce76
 
-    const appinfo = await sdk.ping();
     console.log("before payload");
 
     const request = {
@@ -44,15 +40,33 @@ function NavBar() {
         }
       ]
     }
+ 
+    // createAnsSubscribe function returns {created:__, resolved:__} object which is then destructured in .then
+    // createndSubscribe function also has an eventMesage associated with this
+    xumm.payload.createAndSubscribe(request, eventMessage => {
+      if (Object.keys(eventMessage.data).indexOf('opened') > -1) {
+        // Update the UI? The payload was opened.
+        console.log("payload opened");
+      }
+      if (Object.keys(eventMessage.data).indexOf('signed') > -1) {
+        // The `signed` property is present, true (signed) / false (rejected)
+        console.log("payload signed");
+        return eventMessage
+      }
+    })
+      .then(({ created, resolved }) => {
+        // gets executed once the payload is created
+        console.log('Payload URL:', created.next.always)
+        console.log('Payload QR:', created.refs.qr_png)
+    
+        return resolved // Return payload promise for the next `then`
+      })
+      .then(payload => {
+        // gets executed once the payload is signed
+        console.log('Payload resolved', payload)
+      })  // after the payload has been signed by the user 
 
-    const payload = await sdk.payload.create(request, true)
 
-    // console.log(payload)
-    alert("Click Ok to get the qr code for signing transactions");
-    alert(payload.refs.qr_png);
-    console.log(payload.refs.qr_png)
-
-    setAppName(appinfo.application.name);
   };
 
   if (loading) {

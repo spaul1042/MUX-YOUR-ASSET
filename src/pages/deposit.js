@@ -1,6 +1,6 @@
-import { useState } from "react";
 import styles from "@/styles/Deposit.module.css";
 import NavBar from "../components/NavBar";
+import { useState, useEffect } from "react";
 import { Xumm } from "xumm";
 // {account_address, currency_code, collateral_amount}
 const Deposit = () => {
@@ -8,25 +8,26 @@ const Deposit = () => {
   //  currency code : XRP, MUX, XUM
   // Issuer of MUX and XUM is same
 
+  const [loading, setloading] = useState(false);
   const [accountAddress, setAccountAddress] = useState("");
   const [currency_code, setCode] = useState("");
   const [collateral_amount, setAmount] = useState("");
 
-  
-  const payload = async function () {
-    const sdk = new Xumm(
-      "9f7539a1-f077-4098-8fee-dfc371769a15",
-      "5bb59cad-d471-4d0f-8c06-b0463a78eeff"
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setloading(true);
+    const xumm = new Xumm(
+      "9f7539a1-f077-4098-8fee-dfc371769a15"
     );
-    const appinfo = await sdk.ping();
-    console.log(appinfo.application.name);
-    
-    const intermediary_account = "ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS" ;  // Name on Account on Xumm Wallet -> Test
+
+    const intermediary_account = "ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS";  // Name on Account on Xumm Wallet -> Test
     // this is the intermediary account on MUX-YOUR-ASSET software, where all the collateral is deposited and defaulting repayments happens
     const issuer_account = "r9ipnvUgT4ZYVbiNib4sLCzJ3RGzxfXp6y";
     // this is the account which has issued the MUX and XUM token
+    console.log("before payload");
 
-    const send_token_tx = {
+    let send_token_tx = {
       "TransactionType": "Payment",
       "Account": accountAddress,
       "Amount": {
@@ -36,48 +37,79 @@ const Deposit = () => {
       },
       "Destination": intermediary_account
     }
-
-    console.log("before paylaod");
-    const payload = await sdk.payload.create(send_token_tx, true);
-    console.log("after paylaod");
-
-    // console.log(payload)
-    alert("Click Ok to get the qr code for signing transactions");
-    alert(payload.refs.qr_png);
-    console.log(payload.refs.qr_png);
-
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    await payload();
-    
-    const response = await fetch(
-      "http://localhost:8000/api/deposit_collateral",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          account_address: accountAddress,
-          currency_code: currency_code,
-          collateral_amount: collateral_amount,
-        }),
+     
+    if(currency_code == "XRP")
+    {
+       send_token_tx = {
+        "TransactionType": "Payment",
+        "Account": accountAddress,
+        "Amount": (collateral_amount * 1000000).toString(),
+        "Destination": intermediary_account
       }
-    );
-
-    if (response.ok) {
-      console.log("Success");
-      alert("Successfully deposited Collateral");
-      // handle successful operation
-    } else {
-      console.log("failure");
-      alert("Collateral not deposited because of an error");
-      // handle failed operation
     }
+
+
+    xumm.payload.createAndSubscribe(send_token_tx, eventMessage => {
+      if (Object.keys(eventMessage.data).indexOf('opened') > -1) {
+        // Update the UI? The payload was opened.
+
+      }
+      if (Object.keys(eventMessage.data).indexOf('signed') > -1) {
+        // The `signed` property is present, true (signed) / false (rejected)
+
+        return eventMessage
+      }
+    })
+      .then(({ created, resolved }) => {
+        alert(created.refs.qr_png);
+        console.log('Payload URL:', created.next.always)
+        console.log('Payload QR:', created.refs.qr_png)
+
+        return resolved // Return payload promise for the next `then`
+      })
+      .then((payload) => {
+        // Updating the database
+        console.log("Updating database")
+        const response = fetch(
+          "http://localhost:8000/api/deposit_collateral",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              account_address: accountAddress,
+              currency_code: currency_code,
+              collateral_amount: collateral_amount,
+            }),
+          })
+
+        return response;
+      }).then((response) => {
+        if (response.ok) {
+          console.log("Success");
+          alert("Successfully deposited Collateral");
+          // handle successful operation
+        } else {
+          console.log("failure");
+          alert("Collateral not deposited because of an error");
+          // handle failed operation
+        }
+        setloading(false);
+      })
+      
+
+      
+
   };
+
+  if (loading) {
+    return (
+      <>
+        <div> Loading Content Please wait!</div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -126,7 +158,7 @@ const Deposit = () => {
           Deposit Collateral
         </button>
       </form>
-      <button onClick={payload}>Payload</button>
+
     </>
   );
 };
