@@ -4,6 +4,9 @@ import styles from "@/styles/Home.module.css";
 import NavBar from "../components/NavBar";
 const xrpl = require("xrpl");
 
+// XRP, MUX, XUM Tokens
+// Value of all these are same means if you want take a loan of amount X(of any token), you should have an amount>=X of the other token
+
 function Home() {
   const [balances, setBalances] = useState([0, 0]);
 

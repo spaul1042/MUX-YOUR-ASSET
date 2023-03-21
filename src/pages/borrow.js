@@ -1,6 +1,7 @@
 import styles from "@/styles/Borrow.module.css";
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
+import { Xumm } from "xumm";
 
 // {account_address, currency_code, loan_amount, loan_duration, interest_rate, funders(emptyarray), collateral_currency_code }
 
@@ -24,6 +25,9 @@ export default function Borrow() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Check whether the borrower has the minimum reuired collateral amountor not for that collateral , if yes then proceed 
+
     const response = await fetch(
       "http://localhost:8000/api/borrow",
       {
@@ -59,7 +63,7 @@ export default function Borrow() {
   return (
     <>
       <NavBar />
-
+      Place the Loan
       <div className={styles.borrow_form}>
         <div className={styles.prefix}> Account Address: </div>{" "}
         <input
@@ -119,7 +123,7 @@ export default function Borrow() {
           onChange={handleChange}
         />
         <button className={styles.borrow_form__button} onClick={handleSubmit}>
-          Register as a borrower
+          Place a Loan Request
         </button>
       </div>
 

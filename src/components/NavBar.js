@@ -3,16 +3,11 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Xumm } from "xumm";
 
-
 function NavBar() {
   const [loading, setloading] = useState(false);
   const [appname, setAppName] = useState("App Name ?");
-  const [balances , setBalances] = useState([0, 0]);
-  const [connected, setConnected] = useState(false);
 
   // const [res, setRes] = useState();
-
-  const [xumm, setXumm] = useState();
   // useEffect(() => {
   //   // The js code which needs to be run once the component gets mounted
     
@@ -24,16 +19,18 @@ function NavBar() {
       // redirectUrl: document.location.href + '?custom_state=test'
     });
     await xumm.authorize().catch((e) => console.log("e", e));
-    setConnected(true);
   };
 
   const payload = async function () {
     const sdk = new Xumm(
       "9f7539a1-f077-4098-8fee-dfc371769a15",
-      "5bb59cad-d471-4d0f-8c06-b0463a78eeff"
+      "e93cfbfe-6968-4f9b-bb33-e0bebfe2ce76"
     );
+    // 9f7539a1-f077-4098-8fee-dfc371769a15
+    // e93cfbfe-6968-4f9b-bb33-e0bebfe2ce76
 
     const appinfo = await sdk.ping();
+    console.log("before payload");
 
     const request = {
       "TransactionType": "Payment",

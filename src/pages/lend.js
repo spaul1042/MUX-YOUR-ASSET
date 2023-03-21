@@ -6,10 +6,10 @@ import loan from "../../server/models/loan";
 // Note that here borrowers refer to loans >> Bcz a lender a going to fund a loan
 
 export default function Lend() {
-  const [loading, setloading] = useState(true);
+  const [loading, setloading] = useState(false);
 
-  const [borrowers, setBorrowers] = useState([]);
-  const [selectedBorrowers, setSelectedBorrowers] = useState([]);
+  const [borrowers, setBorrowers] = useState([]); // all loans in database
+  const [selectedBorrowers, setSelectedBorrowers] = useState([]); // selected loans
 
   const toggleBorrowerSelection = (borrower) => {
     if (selectedBorrowers.includes(borrower)) {
@@ -20,11 +20,111 @@ export default function Lend() {
       setSelectedBorrowers([...selectedBorrowers, borrower]);
     }
   };
+  const [formData, setFormData] = useState({
+    account_address: "",
+    currency_code: "",
+    loan_amount: 0,
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (event) => {
+    setloading(true);
+
+    event.preventDefault();
+
+    // Apply your funding algorithm here and the cross currency payment for each transaction on XRP Ledger
+    let loans = new Map(); // mapping of loan id with the current funded amount
+
+    // for (let i = 0; i < selectedBorrowers.length; i++) {
+    //   loans.set(selectedBorrowers[i]._id, 0);
+    // }
+    
+    // funding algorithm : 1 1 1 1 1 1
+    //  1 1 1 0 0 1
+    //  1 1 0 0 0 0
+    // distribute 1's until laon amount of a particuylar loan id becomes 0, Total time complexity O(Lending amount)
+    let total_amount = 0;
+    
+    for (let i = 0; i < selectedBorrowers.length; i++) {
+
+      total_amount += selectedBorrowers[i].loan_amount ;
+      console.log(selectedBorrowers[i].loan_amount );
+
+    }
+    let amount = formData.loan_amount;
+
+    let temp_selectedBorrowers = selectedBorrowers.map(a => ({...a}));
+    
+    // calculating funding districution by risk optimization funding algorithm
+    if(amount > total_amount)
+          amount = total_amount;
+    while (amount > 0) {
+      
+      for (let i = 0; i < temp_selectedBorrowers.length; i++) {
+        if (temp_selectedBorrowers[i].loan_amount > 0) {
+          temp_selectedBorrowers[i].loan_amount--;
+          amount--;
+        }
+      }
+    }
+    for (let i = 0; i < temp_selectedBorrowers.length; i++) {
+      console.log(temp_selectedBorrowers[i].loan_amount,  selectedBorrowers[i].loan_amount );
+    }
+
+    // setting funding amount corresp. to each loan id
+
+    for (let i = 0; i < selectedBorrowers.length; i++) {
+      loans.set(
+        selectedBorrowers[i]._id,
+        selectedBorrowers[i].loan_amount - temp_selectedBorrowers[i].loan_amount
+      );
+    }
+    console.log("True4");
+
+    // updating database
+
+    for (let i = 0; i < selectedBorrowers.length; i++) {
+
+      const funding_amount = loans.get(selectedBorrowers[i]._id) ;
+
+      if (funding_amount > 0) {
+        const formData2 = {
+             account_address: formData.account_address,
+             loan_id: selectedBorrowers[i]._id,
+             funding_amount: funding_amount
+        }
+        console.log("True5");
+        const response = await fetch("http://localhost:8000/api/lend", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData2),
+        });
+
+        if (response.ok) {
+          console.log("Success");
+          // handle successful sign-in
+        } else {
+          alert("failure");
+          break;
+          // handle failed sign-in
+        }
+      }
+    }
+
+    setloading(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/loans');
+        setloading(true);
+        const response = await fetch("http://localhost:8000/api/loans");
         const data = await response.json();
         setBorrowers(data.active_loans);
         console.log("Success");
@@ -48,6 +148,42 @@ export default function Lend() {
   return (
     <>
       <NavBar />
+
+      <div className={styles.borrow_form}>
+        <p className={styles.prefix2}> Fund the Loans! </p>
+        <div className={styles.prefix}> Account Address: </div>{" "}
+        <input
+          type="string"
+          className={styles.borrow_form__input}
+          placeholder="Enter your account address"
+          name="account_address"
+          value={formData.account_address}
+          onChange={handleChange}
+        />
+        <div className={styles.prefix}> Loan Currency Code:</div>{" "}
+        <input
+          type="text"
+          className={styles.borrow_form__input}
+          placeholder="Enter Loan Currency Code"
+          name="currency_code"
+          value={formData.currency_code}
+          onChange={handleChange}
+        />
+        <div className={styles.prefix}> Loan Amount:</div>{" "}
+        <input
+          type="number"
+          step="1"
+          className={styles.borrow_form__input}
+          placeholder="Enter amount to fund"
+          name="loan_amount"
+          value={formData.loan_amount}
+          onChange={handleChange}
+        />
+        <button className={styles.borrow_form__button} onClick={handleSubmit}>
+          Fund The Selected Loans
+        </button>
+      </div>
+
       <div className={styles.borrowersContainer}>
         <h2 className={styles.subTitle}>Borrowers List:</h2>
         {borrowers.length > 0 ? (
@@ -62,7 +198,8 @@ export default function Lend() {
                     {borrower.loan_amount} {borrower.currency_code} Tokens
                   </span>
                   <span className={styles.amount}>
-                    {borrower.interest_rate} % for {borrower.loan_duration} months
+                    {borrower.interest_rate} % for {borrower.loan_duration}{" "}
+                    months
                   </span>
                   <span className={styles.amount}>
                     Collateral Staked in {borrower.collateral_currency_code}
@@ -75,8 +212,7 @@ export default function Lend() {
                     }`}
                     onClick={() => toggleBorrowerSelection(borrower)}
                   >
-                  {selectedBorrowers.includes(borrower) ? "Remove" : "Add"}
-                  
+                    {selectedBorrowers.includes(borrower) ? "Remove" : "Add"}
                   </button>
                 </div>
               </li>
@@ -86,9 +222,6 @@ export default function Lend() {
           <p>No borrowers registered yet.</p>
         )}
       </div>
-
-
-
     </>
   );
 }
