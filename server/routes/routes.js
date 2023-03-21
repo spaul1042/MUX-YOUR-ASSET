@@ -319,7 +319,7 @@ router.get("/loans", async (req, res) => {
     });
 });
 
-
+// API endpoint to check whether an account address is registered or not!
 router.get("/check_register", async (req, res) => {
 
   console.log(req.query.account_address);
@@ -328,25 +328,41 @@ router.get("/check_register", async (req, res) => {
       if(user === null)
       {
         console.log(2)
-        res.setHeader('Content-Type', 'application/json');
         res.status(400).json({ message: "user not found" });
       }
       else if(user.length === 0)
       {
         console.log(2)
-        res.setHeader('Content-Type', 'application/json');
         res.status(400).json({ message: "user not found" });
       }
       else{
         console.log(1)
-        res.setHeader('Content-Type', 'application/json');
         res.status(201).json({ message : "user found" })
       }
       
     })
     .catch((err) => {
       console.log(3)
-      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({ message: err.message });
+    });
+});
+
+// API Endpoint to output all loans whose loan amount is > 0
+router.get("/selected_loans", async (req, res) => {
+
+  console.log(req.query.currency_code);
+  Loan.find({currency_code:req.query.currency_code})
+    .then((loans) => {
+      if(loans.length === 0)
+      {
+        res.status(401).json({message: "No loan found with the given currency code"});
+      }
+      else{
+      res.status(201).json({ loans: loans });
+      }
+    })
+    .catch((err) => {
+      console.log(3)
       res.status(400).json({ message: err.message });
     });
 });

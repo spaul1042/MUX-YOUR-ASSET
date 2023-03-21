@@ -9,8 +9,10 @@ import { Xumm } from "xumm";
 export default function Lend() {
   const [loading, setloading] = useState(false);
 
-  const [borrowers, setBorrowers] = useState([]); // all loans in database
-  const [selectedBorrowers, setSelectedBorrowers] = useState([]); // selected loans
+  // const [demo, setDemo] = useState();
+  const [borrowers, setBorrowers] = useState([]); // all loans of the database
+  const [filteredBorrowers, setFilteredBorrowers] = useState([]);  // filtered loans
+  const [selectedBorrowers, setSelectedBorrowers] = useState([]); // selected loans by the lender whom he/she wants to lend
 
   const toggleBorrowerSelection = (borrower) => {
     if (selectedBorrowers.includes(borrower)) {
@@ -32,7 +34,47 @@ export default function Lend() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleClick = async () => {
+
+    const response = await fetch(
+      "http://localhost:8000/api/selected_loans?" +
+        new URLSearchParams({
+          currency_code: formData.currency_code,
+        }),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+
+    if(response.status === 201)
+    {
+        console.log(201);
+        setFilteredBorrowers(data.loans); 
+        // setDemo();
+
+        
+    }
+    else if(response.status === 401)
+    {
+         alert(data.message);
+         return;
+    }
+    else
+    {
+        return;
+    }
+    
+  };
   const handleSubmit = async (event) => {
+    if (selectedBorrowers.length === 0) {
+      alert("Please select at least one loan");
+      return;
+    }
     event.preventDefault();
     setloading(true);
     const xumm = new Xumm("9f7539a1-f077-4098-8fee-dfc371769a15");
@@ -148,11 +190,10 @@ export default function Lend() {
               },
               body: JSON.stringify(formData2),
             });
-
           }
         }
 
-        return { "ok": true };
+        return { ok: true };
       })
       .then((response) => {
         if (response.ok) {
@@ -166,16 +207,15 @@ export default function Lend() {
         }
         setloading(false);
       });
-
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setloading(true);
-        const response = await fetch("http://localhost:8000/api/loans");
-        const data = await response.json();
-        setBorrowers(data.active_loans);
+        // const response = await fetch("http://localhost:8000/api/loans");
+        // const data = await response.json();
+        // setBorrowers(data.active_loans);
         console.log("Success");
       } catch (error) {
         console.log("Error:", error);
@@ -199,7 +239,7 @@ export default function Lend() {
       <NavBar />
 
       <div className={styles.borrow_form}>
-        <p className={styles.prefix2}> Fund the Loans! </p>
+        <p className={styles.prefix2}> Fund the Loans!</p>
         <div className={styles.prefix}> Account Address: </div>{" "}
         <input
           type="string"
@@ -231,43 +271,50 @@ export default function Lend() {
         <button className={styles.borrow_form__button} onClick={handleSubmit}>
           Fund The Selected Loans
         </button>
+        <p className={styles.prefix2}> Filter Loans based on what currency code you want to lend </p>
+        <button className={styles.borrow_form__button} onClick={handleClick}>
+          Filter
+        </button>
       </div>
 
       <div className={styles.borrowersContainer}>
         <h2 className={styles.subTitle}>Borrowers List:</h2>
-        {borrowers.length > 0 ? (
+        {filteredBorrowers.length > 0 ? (
           <ul className={styles.list}>
-            {borrowers.map((borrower, index) => (
-              <li key={index} className={styles.listItem}>
-                <div className={styles.borrower}>
-                  <span className={styles.name}>
-                    {borrower.account_address}
-                  </span>
-                  <span className={styles.amount}>
-                    {borrower.loan_amount} {borrower.currency_code} Tokens
-                  </span>
-                  <span className={styles.amount}>
-                    {borrower.interest_rate} % for {borrower.loan_duration}{" "}
-                    months
-                  </span>
-                  <span className={styles.amount}>
-                    Collateral Staked in {borrower.collateral_currency_code}
-                  </span>
-                  <button
-                    className={`${styles.toggleButton} ${selectedBorrowers.includes(borrower)
+
+          {filteredBorrowers.map((borrower, index) => (
+            <li key={index} className={styles.listItem}>
+              <div className={styles.borrower}>
+                <span className={styles.name}>
+                  {borrower.account_address}
+                </span>
+                <span className={styles.amount}>
+                  {borrower.loan_amount} {borrower.currency_code} Tokens
+                </span>
+                <span className={styles.amount}>
+                  {borrower.interest_rate} % for {borrower.loan_duration}{" "}
+                  months
+                </span>
+                <span className={styles.amount}>
+                  Collateral Staked in {borrower.collateral_currency_code}
+                </span>
+                <button
+                  className={`${styles.toggleButton} ${
+                    selectedBorrowers.includes(borrower)
                       ? styles.selectedToggleButton
                       : ""
-                      }`}
-                    onClick={() => toggleBorrowerSelection(borrower)}
-                  >
-                    {selectedBorrowers.includes(borrower) ? "Remove" : "Add"}
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  }`}
+                  onClick={() => toggleBorrowerSelection(borrower)}
+                >
+                  {selectedBorrowers.includes(borrower) ? "Remove" : "Add"}
+                </button>
+              </div>
+            </li>
+          ))}
+          
+        </ul>
         ) : (
-          <p>No borrowers registered yet.</p>
+          <p> Filter Loans by Currency Code to see more!!</p>
         )}
       </div>
     </>
