@@ -319,4 +319,35 @@ router.get("/loans", async (req, res) => {
     });
 });
 
+
+router.get("/check_register", async (req, res) => {
+
+  console.log(req.query.account_address);
+  User.find({account_address:req.query.account_address})
+    .then((user) => {
+      if(user === null)
+      {
+        console.log(2)
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400).json({ message: "user not found" });
+      }
+      else if(user.length === 0)
+      {
+        console.log(2)
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400).json({ message: "user not found" });
+      }
+      else{
+        console.log(1)
+        res.setHeader('Content-Type', 'application/json');
+        res.status(201).json({ message : "user found" })
+      }
+      
+    })
+    .catch((err) => {
+      console.log(3)
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({ message: err.message });
+    });
+});
 module.exports = router;

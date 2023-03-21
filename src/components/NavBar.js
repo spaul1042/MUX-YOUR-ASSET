@@ -5,7 +5,6 @@ import { Xumm } from "xumm";
 
 function NavBar() {
   const [loading, setloading] = useState(false);
-  const [appname, setAppName] = useState("App Name ?");
 
   // const [res, setRes] = useState();
   // useEffect(() => {
@@ -98,7 +97,7 @@ function NavBar() {
             </div>
           </li>
         </ul>
-        <div>{appname} </div>
+        
         <div className={styles.connectbtn}>
           <button onClick={connect}>Connect Wallet </button>
         </div>

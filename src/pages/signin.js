@@ -2,6 +2,8 @@ import { useState } from 'react';
 import styles from "@/styles/SignInForm.module.css";
 import NavBar from "../components/NavBar";
 
+// Signin Form basically means registering ones account
+
 const SignInForm = () => {
   const [accountAddress, setAccountAddress] = useState('');
   const [name, setName] = useState('');
@@ -23,11 +25,11 @@ const SignInForm = () => {
       }),
     });
 
-    if (response.ok) {
-      console.log("Success");
+    if (response.status === 400) {
+      alert("failed to register account");
       // handle successful sign-in
     } else {
-      console.log("failure");
+      alert("Successfully registerd account");
       // handle failed sign-in
     }
   };

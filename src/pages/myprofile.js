@@ -11,7 +11,7 @@ function MyProfile() {
         <h1 className={styles.title}>Welcome to Your Profile</h1>
 
         <Link className={styles.button1} href="/signin">
-          Sign In
+          Register your account!
         </Link>
 
         <Link className={styles.button1} href="/deposit">

@@ -39,11 +39,14 @@ export default function Borrow() {
       }
     );
 
-    if (response.ok) {
-      console.log("Success");
+    if (response.status == 400) {
+      if(response.message === "User not found")
+          alert(response.message);
+      else
+          alert("Error : Loan Request Not placed")
       // handle successful sign-in
     } else {
-      console.log("failure");
+      alert("Loan succesfully registered");
       // handle failed sign-in
     }
   };

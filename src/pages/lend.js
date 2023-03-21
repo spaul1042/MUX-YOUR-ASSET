@@ -2,6 +2,7 @@ import styles from "@/styles/Lend.module.css";
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
 import loan from "../../server/models/loan";
+import { Xumm } from "xumm";
 
 // Note that here borrowers refer to loans >> Bcz a lender a going to fund a loan
 
@@ -32,9 +33,13 @@ export default function Lend() {
   };
 
   const handleSubmit = async (event) => {
-    setloading(true);
-
     event.preventDefault();
+    setloading(true);
+    const xumm = new Xumm("9f7539a1-f077-4098-8fee-dfc371769a15");
+
+    const issuer_account = "r9ipnvUgT4ZYVbiNib4sLCzJ3RGzxfXp6y";
+    // this is the account which has issued the MUX and XUM token
+    console.log("before payload");
 
     // Apply your funding algorithm here and the cross currency payment for each transaction on XRP Ledger
     let loans = new Map(); // mapping of loan id with the current funded amount
@@ -42,28 +47,24 @@ export default function Lend() {
     // for (let i = 0; i < selectedBorrowers.length; i++) {
     //   loans.set(selectedBorrowers[i]._id, 0);
     // }
-    
+
     // funding algorithm : 1 1 1 1 1 1
     //  1 1 1 0 0 1
     //  1 1 0 0 0 0
     // distribute 1's until laon amount of a particuylar loan id becomes 0, Total time complexity O(Lending amount)
     let total_amount = 0;
-    
+
     for (let i = 0; i < selectedBorrowers.length; i++) {
-
-      total_amount += selectedBorrowers[i].loan_amount ;
-      console.log(selectedBorrowers[i].loan_amount );
-
+      total_amount += selectedBorrowers[i].loan_amount;
+      console.log(selectedBorrowers[i].loan_amount);
     }
     let amount = formData.loan_amount;
 
-    let temp_selectedBorrowers = selectedBorrowers.map(a => ({...a}));
-    
+    let temp_selectedBorrowers = selectedBorrowers.map((a) => ({ ...a }));
+
     // calculating funding districution by risk optimization funding algorithm
-    if(amount > total_amount)
-          amount = total_amount;
+    if (amount > total_amount) amount = total_amount;
     while (amount > 0) {
-      
       for (let i = 0; i < temp_selectedBorrowers.length; i++) {
         if (temp_selectedBorrowers[i].loan_amount > 0) {
           temp_selectedBorrowers[i].loan_amount--;
@@ -72,7 +73,10 @@ export default function Lend() {
       }
     }
     for (let i = 0; i < temp_selectedBorrowers.length; i++) {
-      console.log(temp_selectedBorrowers[i].loan_amount,  selectedBorrowers[i].loan_amount );
+      console.log(
+        temp_selectedBorrowers[i].loan_amount,
+        selectedBorrowers[i].loan_amount
+      );
     }
 
     // setting funding amount corresp. to each loan id
@@ -85,39 +89,84 @@ export default function Lend() {
     }
     console.log("True4");
 
-    // updating database
+    let send_token_tx = {
+      TransactionType: "Payment",
+      Account: accountAddress,
+      Amount: {
+        currency: currency_code,
+        value: collateral_amount,
+        issuer: issuer_account,
+      },
+      Destination: intermediary_account,
+    };
 
-    for (let i = 0; i < selectedBorrowers.length; i++) {
-
-      const funding_amount = loans.get(selectedBorrowers[i]._id) ;
-
-      if (funding_amount > 0) {
-        const formData2 = {
-             account_address: formData.account_address,
-             loan_id: selectedBorrowers[i]._id,
-             funding_amount: funding_amount
-        }
-        console.log("True5");
-        const response = await fetch("http://localhost:8000/api/lend", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData2),
-        });
-
-        if (response.ok) {
-          console.log("Success");
-          // handle successful sign-in
-        } else {
-          alert("failure");
-          break;
-          // handle failed sign-in
-        }
-      }
+    if (currency_code == "XRP") {
+      send_token_tx = {
+        TransactionType: "Payment",
+        Account: accountAddress,
+        Amount: (collateral_amount * 1000000).toString(),
+        Destination: intermediary_account,
+      };
     }
 
-    setloading(false);
+    xumm.payload
+      .createAndSubscribe(send_token_tx, (eventMessage) => {
+        if (Object.keys(eventMessage.data).indexOf("opened") > -1) {
+          // Update the UI? The payload was opened.
+        }
+        if (Object.keys(eventMessage.data).indexOf("signed") > -1) {
+          // The `signed` property is present, true (signed) / false (rejected)
+
+          return eventMessage;
+        }
+      })
+      .then(({ created, resolved }) => {
+        alert(created.refs.qr_png);
+        console.log("Payload URL:", created.next.always);
+        console.log("Payload QR:", created.refs.qr_png);
+
+        return resolved; // Return payload promise for the next `then`
+      })
+      .then(async (payload) => {
+        // Updating the database
+        console.log("Updating database");
+
+        for (let i = 0; i < selectedBorrowers.length; i++) {
+          const funding_amount = loans.get(selectedBorrowers[i]._id);
+
+          if (funding_amount > 0) {
+            const formData2 = {
+              account_address: formData.account_address,
+              loan_id: selectedBorrowers[i]._id,
+              funding_amount: funding_amount,
+            };
+            console.log("True5");
+            const response = await fetch("http://localhost:8000/api/lend", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData2),
+            });
+
+          }
+        }
+
+        return { "ok": true };
+      })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Success");
+          alert("Successfully deposited Collateral");
+          // handle successful operation
+        } else {
+          console.log("failure");
+          alert("Collateral not deposited because of an error");
+          // handle failed operation
+        }
+        setloading(false);
+      });
+
   };
 
   useEffect(() => {
@@ -205,11 +254,10 @@ export default function Lend() {
                     Collateral Staked in {borrower.collateral_currency_code}
                   </span>
                   <button
-                    className={`${styles.toggleButton} ${
-                      selectedBorrowers.includes(borrower)
-                        ? styles.selectedToggleButton
-                        : ""
-                    }`}
+                    className={`${styles.toggleButton} ${selectedBorrowers.includes(borrower)
+                      ? styles.selectedToggleButton
+                      : ""
+                      }`}
                     onClick={() => toggleBorrowerSelection(borrower)}
                   >
                     {selectedBorrowers.includes(borrower) ? "Remove" : "Add"}
