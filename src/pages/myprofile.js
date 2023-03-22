@@ -18,6 +18,15 @@ function MyProfile() {
           Deposit Collateral
         </Link>
       </div>
+      <div className={styles.container}>
+        <Link className={styles.button1} href="/myloans">
+          Get your Loan Requests
+        </Link>
+
+        <Link className={styles.button1} href="/myfundings">
+          Get your Funded Loans
+        </Link>
+      </div>
     </>
   );
 }

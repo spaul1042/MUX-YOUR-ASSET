@@ -26,24 +26,19 @@ export default function Borrow() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Check whether the borrower has the minimum reuired collateral amountor not for that collateral , if yes then proceed 
+    // Check whether the borrower has the minimum reuired collateral amountor not for that collateral , if yes then proceed
 
-    const response = await fetch(
-      "http://localhost:8000/api/borrow",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    );
+    const response = await fetch("http://localhost:8000/api/borrow", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await response.json();
 
     if (response.status == 400) {
-      if(response.message === "User not found")
-          alert(response.message);
-      else
-          alert("Error : Loan Request Not placed")
+      alert(data.message);
       // handle successful sign-in
     } else {
       alert("Loan succesfully registered");
@@ -129,7 +124,6 @@ export default function Borrow() {
           Place a Loan Request
         </button>
       </div>
-
     </>
   );
 }

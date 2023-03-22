@@ -347,8 +347,48 @@ router.get("/check_register", async (req, res) => {
     });
 });
 
-// API Endpoint to output all loans whose loan amount is > 0
+// API Endpoint to filter loans based on currency code 
 router.get("/selected_loans", async (req, res) => {
+
+  console.log(req.query.currency_code);
+  Loan.find({currency_code:req.query.currency_code})
+    .then((loans) => {
+      if(loans.length === 0)
+      {
+        res.status(401).json({message: "No loan found with the given currency code"});
+      }
+      else{
+      res.status(201).json({ loans: loans });
+      }
+    })
+    .catch((err) => {
+      console.log(3)
+      res.status(400).json({ message: err.message });
+    });
+});
+
+// API Endpoint to get all loan requests of an account address
+router.get("/myloans", async (req, res) => {
+
+  console.log(req.query.currency_code);
+  Loan.find({currency_code:req.query.currency_code})
+    .then((loans) => {
+      if(loans.length === 0)
+      {
+        res.status(401).json({message: "No loan found with the given currency code"});
+      }
+      else{
+      res.status(201).json({ loans: loans });
+      }
+    })
+    .catch((err) => {
+      console.log(3)
+      res.status(400).json({ message: err.message });
+    });
+});
+
+// API Endpoint to get all loans funded from an account address
+router.get("/myfundings", async (req, res) => {
 
   console.log(req.query.currency_code);
   Loan.find({currency_code:req.query.currency_code})

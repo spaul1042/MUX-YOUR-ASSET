@@ -11,7 +11,7 @@ export default function Lend() {
 
   // const [demo, setDemo] = useState();
   const [borrowers, setBorrowers] = useState([]); // all loans of the database
-  const [filteredBorrowers, setFilteredBorrowers] = useState([]);  // filtered loans
+  const [filteredBorrowers, setFilteredBorrowers] = useState([]); // filtered loans
   const [selectedBorrowers, setSelectedBorrowers] = useState([]); // selected loans by the lender whom he/she wants to lend
 
   const toggleBorrowerSelection = (borrower) => {
@@ -35,7 +35,6 @@ export default function Lend() {
   };
 
   const handleClick = async () => {
-
     const response = await fetch(
       "http://localhost:8000/api/selected_loans?" +
         new URLSearchParams({
@@ -51,30 +50,25 @@ export default function Lend() {
     const data = await response.json();
     console.log(data);
 
-    if(response.status === 201)
-    {
-        console.log(201);
-        setFilteredBorrowers(data.loans); 
-        // setDemo();
-
-        
+    if (response.status === 201) {
+      console.log(201);
+      setFilteredBorrowers(data.loans);
+      // setDemo();
+    } else if (response.status === 401) {
+      setFilteredBorrowers([]);
+      alert(data.message);
+      return;
+    } else {
+      return;
     }
-    else if(response.status === 401)
-    {
-         alert(data.message);
-         return;
-    }
-    else
-    {
-        return;
-    }
-    
   };
+
   const handleSubmit = async (event) => {
     if (selectedBorrowers.length === 0) {
       alert("Please select at least one loan");
       return;
     }
+
     event.preventDefault();
     setloading(true);
     const xumm = new Xumm("9f7539a1-f077-4098-8fee-dfc371769a15");
@@ -105,7 +99,15 @@ export default function Lend() {
     let temp_selectedBorrowers = selectedBorrowers.map((a) => ({ ...a }));
 
     // calculating funding districution by risk optimization funding algorithm
-    if (amount > total_amount) amount = total_amount;
+    amount;
+    if (amount > total_amount) {
+      amount = total_amount;
+    }
+    let temp = "Total amount to be districuted is: " + amount.toString();
+
+    // alert1
+    alert(temp);
+
     while (amount > 0) {
       for (let i = 0; i < temp_selectedBorrowers.length; i++) {
         if (temp_selectedBorrowers[i].loan_amount > 0) {
@@ -129,58 +131,62 @@ export default function Lend() {
         selectedBorrowers[i].loan_amount - temp_selectedBorrowers[i].loan_amount
       );
     }
-    console.log("True4");
 
-    let send_token_tx = {
-      TransactionType: "Payment",
-      Account: accountAddress,
-      Amount: {
-        currency: currency_code,
-        value: collateral_amount,
-        issuer: issuer_account,
-      },
-      Destination: intermediary_account,
-    };
+    // alert2
+    alert(
+      "We have distributed the amount optimally, If there is no error, you will get a series of sign requests (xumm qr code link on alerts) to distribute"
+    );
 
-    if (currency_code == "XRP") {
-      send_token_tx = {
-        TransactionType: "Payment",
-        Account: accountAddress,
-        Amount: (collateral_amount * 1000000).toString(),
-        Destination: intermediary_account,
-      };
-    }
+    for (let i = 0; i < selectedBorrowers.length; i++) {
+      const amount = loans.get(selectedBorrowers[i]._id);
+      if (amount > 0) {
+        let send_token_tx = {
+          TransactionType: "Payment",
+          Account: formData.account_address,
+          Amount: {
+            currency: formData.currency_code,
+            value: amount,
+            issuer: issuer_account,
+          },
+          Destination: selectedBorrowers[i].account_address,
+        };
 
-    xumm.payload
-      .createAndSubscribe(send_token_tx, (eventMessage) => {
-        if (Object.keys(eventMessage.data).indexOf("opened") > -1) {
-          // Update the UI? The payload was opened.
+        if (selectedBorrowers[i].currency_code == "XRP") {
+          send_token_tx = {
+            TransactionType: "Payment",
+            Account: formData.account_address,
+            Amount: (amount * 1000000).toString(),
+            Destination: selectedBorrowers[i].account_address,
+          };
         }
-        if (Object.keys(eventMessage.data).indexOf("signed") > -1) {
-          // The `signed` property is present, true (signed) / false (rejected)
 
-          return eventMessage;
-        }
-      })
-      .then(({ created, resolved }) => {
-        alert(created.refs.qr_png);
-        console.log("Payload URL:", created.next.always);
-        console.log("Payload QR:", created.refs.qr_png);
+        // Payload
+        xumm.payload
+          .createAndSubscribe(send_token_tx, (eventMessage) => {
+            if (Object.keys(eventMessage.data).indexOf("opened") > -1) {
+              // Update the UI? The payload was opened.
+            }
+            if (Object.keys(eventMessage.data).indexOf("signed") > -1) {
+              // The `signed` property is present, true (signed) / false (rejected)
 
-        return resolved; // Return payload promise for the next `then`
-      })
-      .then(async (payload) => {
-        // Updating the database
-        console.log("Updating database");
+              return eventMessage;
+            }
+          })
+          .then(({ created, resolved }) => {
+            alert(created.refs.qr_png);
+            console.log("Payload URL:", created.next.always);
+            console.log("Payload QR:", created.refs.qr_png);
 
-        for (let i = 0; i < selectedBorrowers.length; i++) {
-          const funding_amount = loans.get(selectedBorrowers[i]._id);
+            return resolved; // Return payload promise for the next `then`
+          })
+          .then(async (payload) => {
+            // Updating the database
+            console.log("Updating database");
 
-          if (funding_amount > 0) {
             const formData2 = {
               account_address: formData.account_address,
               loan_id: selectedBorrowers[i]._id,
-              funding_amount: funding_amount,
+              funding_amount: amount,
             };
             console.log("True5");
             const response = await fetch("http://localhost:8000/api/lend", {
@@ -190,23 +196,27 @@ export default function Lend() {
               },
               body: JSON.stringify(formData2),
             });
-          }
-        }
 
-        return { ok: true };
-      })
-      .then((response) => {
-        if (response.ok) {
-          console.log("Success");
-          alert("Successfully deposited Collateral");
-          // handle successful operation
-        } else {
-          console.log("failure");
-          alert("Collateral not deposited because of an error");
-          // handle failed operation
-        }
-        setloading(false);
-      });
+            return { ok: true };
+          })
+          .then((response) => {
+            if (response.ok) {
+              console.log("Success");
+              alert("Successfully paid last loan");
+              // handle successful operation
+            } else {
+              console.log("failure");
+              alert("LastLoan payment failed");
+              // handle failed operation
+            }
+          });
+      }
+      setloading(false);
+    }
+
+    // alert3
+    alert("Success");
+    console.log("True4");
   };
 
   useEffect(() => {
@@ -271,7 +281,10 @@ export default function Lend() {
         <button className={styles.borrow_form__button} onClick={handleSubmit}>
           Fund The Selected Loans
         </button>
-        <p className={styles.prefix2}> Filter Loans based on what currency code you want to lend </p>
+        <p className={styles.prefix2}>
+          {" "}
+          Filter Loans based on what currency code you want to lend{" "}
+        </p>
         <button className={styles.borrow_form__button} onClick={handleClick}>
           Filter
         </button>
@@ -281,38 +294,36 @@ export default function Lend() {
         <h2 className={styles.subTitle}>Borrowers List:</h2>
         {filteredBorrowers.length > 0 ? (
           <ul className={styles.list}>
-
-          {filteredBorrowers.map((borrower, index) => (
-            <li key={index} className={styles.listItem}>
-              <div className={styles.borrower}>
-                <span className={styles.name}>
-                  {borrower.account_address}
-                </span>
-                <span className={styles.amount}>
-                  {borrower.loan_amount} {borrower.currency_code} Tokens
-                </span>
-                <span className={styles.amount}>
-                  {borrower.interest_rate} % for {borrower.loan_duration}{" "}
-                  months
-                </span>
-                <span className={styles.amount}>
-                  Collateral Staked in {borrower.collateral_currency_code}
-                </span>
-                <button
-                  className={`${styles.toggleButton} ${
-                    selectedBorrowers.includes(borrower)
-                      ? styles.selectedToggleButton
-                      : ""
-                  }`}
-                  onClick={() => toggleBorrowerSelection(borrower)}
-                >
-                  {selectedBorrowers.includes(borrower) ? "Remove" : "Add"}
-                </button>
-              </div>
-            </li>
-          ))}
-          
-        </ul>
+            {filteredBorrowers.map((borrower, index) => (
+              <li key={index} className={styles.listItem}>
+                <div className={styles.borrower}>
+                  <span className={styles.name}>
+                    {borrower.account_address}
+                  </span>
+                  <span className={styles.amount}>
+                    {borrower.loan_amount} {borrower.currency_code} Tokens
+                  </span>
+                  <span className={styles.amount}>
+                    {borrower.interest_rate} % for {borrower.loan_duration}{" "}
+                    months
+                  </span>
+                  <span className={styles.amount}>
+                    Collateral Staked in {borrower.collateral_currency_code}
+                  </span>
+                  <button
+                    className={`${styles.toggleButton} ${
+                      selectedBorrowers.includes(borrower)
+                        ? styles.selectedToggleButton
+                        : ""
+                    }`}
+                    onClick={() => toggleBorrowerSelection(borrower)}
+                  >
+                    {selectedBorrowers.includes(borrower) ? "Remove" : "Add"}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : (
           <p> Filter Loans by Currency Code to see more!!</p>
         )}
