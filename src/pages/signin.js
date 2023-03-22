@@ -78,7 +78,7 @@ const SignInForm = () => {
         />
       </div>
       <button type="submit" className={styles.submitButton}>
-        Sign In
+        Register your account!
       </button>
     </form>
     </>

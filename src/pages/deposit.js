@@ -72,18 +72,20 @@ const Deposit = () => {
       };
     }
 
+    //payload gets created with an event associated with it 
     xumm.payload
       .createAndSubscribe(send_token_tx, (eventMessage) => {
         if (Object.keys(eventMessage.data).indexOf("opened") > -1) {
-          // Update the UI? The payload was opened.
+          // Update the UI? after the payload was opened.
         }
         if (Object.keys(eventMessage.data).indexOf("signed") > -1) {
           // The `signed` property is present, true (signed) / false (rejected)
-
           return eventMessage;
         }
       })
       .then(({ created, resolved }) => {
+        //  called after payload creation
+        // Update UI after payload ceation
         alert(created.refs.qr_png);
         console.log("Payload URL:", created.next.always);
         console.log("Payload QR:", created.refs.qr_png);
@@ -91,6 +93,8 @@ const Deposit = () => {
         return resolved; // Return payload promise for the next `then`
       })
       .then((payload) => {
+        // Called when the payload was signed
+        // Update UI after payload is signed
         // Updating the database
         console.log("Updating database");
         const response = fetch("http://localhost:8000/api/deposit_collateral", {

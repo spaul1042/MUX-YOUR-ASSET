@@ -306,7 +306,7 @@ router.post("/deposit_collateral", async (req, res) => {
   }
 });
 
-// GET Requests
+// GET Requests API endpoint to get all loans placed on the platform 
 router.get("/loans", async (req, res) => {
   const query7 = Loan.find({});
 
@@ -347,6 +347,7 @@ router.get("/check_register", async (req, res) => {
     });
 });
 
+
 // API Endpoint to filter loans based on currency code 
 router.get("/selected_loans", async (req, res) => {
 
@@ -367,18 +368,23 @@ router.get("/selected_loans", async (req, res) => {
     });
 });
 
+
 // API Endpoint to get all loan requests of an account address
 router.get("/myloans", async (req, res) => {
 
-  console.log(req.query.currency_code);
-  Loan.find({currency_code:req.query.currency_code})
-    .then((loans) => {
-      if(loans.length === 0)
+  console.log(req.query.account_address);
+  Borrower.find({account_address:req.query.account_address})
+    .then((sel_borrower) => {
+      if(sel_borrower === null)
       {
-        res.status(401).json({message: "No loan found with the given currency code"});
+        res.status(401).json({message: "Account address is not registered with us"});
+      }
+      else if(sel_borrower.requested_loans.length === 0)
+      {
+        res.status(401).json({message: "You have not placed any loan request"});
       }
       else{
-      res.status(201).json({ loans: loans });
+         res.status(201).json({ myloans: sel_borrower.requested_loans });
       }
     })
     .catch((err) => {
@@ -387,18 +393,24 @@ router.get("/myloans", async (req, res) => {
     });
 });
 
+
+
 // API Endpoint to get all loans funded from an account address
 router.get("/myfundings", async (req, res) => {
 
-  console.log(req.query.currency_code);
-  Loan.find({currency_code:req.query.currency_code})
-    .then((loans) => {
-      if(loans.length === 0)
+  console.log(req.query.account_address);
+  Lender.find({account_address:req.query.account_address})
+    .then((sel_lender) => {
+      if(sel_lender === null)
       {
-        res.status(401).json({message: "No loan found with the given currency code"});
+        res.status(401).json({message: "You have not funded any loan request"});
+      }
+      else if(sel_lender.funded_loans.length === 0)
+      {
+        res.status(401).json({message: "You have not funded any loan request"});
       }
       else{
-      res.status(201).json({ loans: loans });
+         res.status(201).json({ myfundings: sel_lender.funded_loans });
       }
     })
     .catch((err) => {
