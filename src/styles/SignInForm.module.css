@@ -1,12 +1,23 @@
+.h2 {
+  font-size: xx-large;
+  margin-bottom:77px;
+  text-align: center;
+}
+
 .form {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    margin: auto;
-  }
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  margin: auto;
+  align-items: center; /* center horizontally */
+  justify-content: center; /* center vertically */
+  height: 100vh; /* set height to the full height of the viewport */
+}
+
   
   .field {
     margin-bottom: 1rem;
+    width:300px;
   }
   
   .label {
@@ -21,9 +32,12 @@
     border: 1px solid #ccc;
     border-radius: 3px;
     width: 100%;
+    max-width: 2000px;
   }
   
   .submitButton {
+    font-size: larger;
+    margin:30px;
     background-color: #0070f3;
     color: #fff;
     padding: 0.5rem 1rem;

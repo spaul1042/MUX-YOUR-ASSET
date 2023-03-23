@@ -37,7 +37,9 @@ const SignInForm = () => {
   return (
     <>
     <NavBar/>
+    
     <form onSubmit={handleSubmit} className={styles.form}>
+    <h2 className={styles.h2}> Register your account </h2>
       <div className={styles.field}>
         <label htmlFor="accountAddress" className={styles.label}>
           Account Address

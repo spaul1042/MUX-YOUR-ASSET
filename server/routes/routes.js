@@ -373,18 +373,18 @@ router.get("/selected_loans", async (req, res) => {
 router.get("/myloans", async (req, res) => {
 
   console.log(req.query.account_address);
-  Borrower.find({account_address:req.query.account_address})
-    .then((sel_borrower) => {
-      if(sel_borrower === null)
+  Loan.find({account_address:req.query.account_address})
+    .then((sel_loans) => {
+      if(sel_loans === null)
       {
-        res.status(401).json({message: "Account address is not registered with us"});
+        res.status(401).json({message: "error"});
       }
-      else if(sel_borrower.requested_loans.length === 0)
+      else if(sel_loans.length === 0)
       {
         res.status(401).json({message: "You have not placed any loan request"});
       }
       else{
-         res.status(201).json({ myloans: sel_borrower.requested_loans });
+         res.status(201).json({ myloans: sel_loans});
       }
     })
     .catch((err) => {
@@ -401,6 +401,7 @@ router.get("/myfundings", async (req, res) => {
   console.log(req.query.account_address);
   Lender.find({account_address:req.query.account_address})
     .then((sel_lender) => {
+      console.log(sel_lender);
       if(sel_lender === null)
       {
         res.status(401).json({message: "You have not funded any loan request"});

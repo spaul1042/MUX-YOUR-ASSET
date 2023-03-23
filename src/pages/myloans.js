@@ -7,9 +7,9 @@ import NavBar from "../components/NavBar";
 const Myloans = () => {
   const [accountAddress, setAccountAddress] = useState("");
   const [filteredLoans, setFilteredLoans] = useState([
-    { loan_id: "demo", funding_amount: 12 },
-    { loan_id: "demo", funding_amount: 12 },
-    { loan_id: "demo", funding_amount: 12 },
+    { loan_id: "demo", loan_amount: 0 },
+    { loan_id: "demo", loan_amount: 12 },
+    { loan_id: "demo", loan_amount: 12 },
   ]);
 
   const handleSubmit = async (event) => {
@@ -47,6 +47,8 @@ const Myloans = () => {
     <>
       <NavBar />
       <form onSubmit={handleSubmit} className={styles.form}>
+      <h2 className={styles.h2}> Get Your Requested Loans</h2>
+
         <div className={styles.field}>
           <label htmlFor="accountAddress" className={styles.label}>
             Account Address
@@ -66,14 +68,20 @@ const Myloans = () => {
       </form>
 
       <div className={styles.loan_cards_container}>
-        {filteredLoans.map((loan) => (
-          <div key={loan.loan_id} className={styles.loan_card}>
-            <p>Loan ID: {loan.loan_id}</p>
-            <p>Funding Amount: {loan.funding_amount}</p>
+        {filteredLoans.map((loan, index) => (
+          <div key={index} className={styles.loan_card}>
+            <p >Loan ID: {loan.loan_id}</p>
+            <p >Current unfunded Loan Amount: {loan.loan_amount}</p>
+            {loan.loan_amount <= 0 ? (
+              <button className={styles.pay_button}>Pay Back</button>
+            ) : (
+              <button className={styles.disabled_button} disabled>
+                Pay Back
+              </button>
+            )}
           </div>
         ))}
       </div>
-
     </>
   );
 };
