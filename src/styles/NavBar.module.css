@@ -14,6 +14,8 @@
 }
 
 .nav li {
+  margin-top:4px;
+  font-size: large;
   margin-right: 3rem;
 }
 
@@ -26,4 +28,11 @@
   /* position: absolute; */
   top: 1rem;
   right: 1rem;
+}
+.connectbtn button{
+  font-size: large;
+}
+.img{
+  margin-left: 10px;
+  margin-right:100px;
 }

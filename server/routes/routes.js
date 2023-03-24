@@ -373,7 +373,7 @@ router.get("/selected_loans", async (req, res) => {
 router.get("/myloans", async (req, res) => {
 
   console.log(req.query.account_address);
-  Loan.find({account_address:req.query.account_address})
+  Loan.findOneAndDelete({account_address:req.query.account_address})
     .then((sel_loans) => {
       if(sel_loans === null)
       {
@@ -389,7 +389,7 @@ router.get("/myloans", async (req, res) => {
     })
     .catch((err) => {
       console.log(3)
-      res.status(400).json({ message: err.message });
+      res.status(401).json({ message: err.message });
     });
 });
 
@@ -399,24 +399,21 @@ router.get("/myloans", async (req, res) => {
 router.get("/myfundings", async (req, res) => {
 
   console.log(req.query.account_address);
-  Lender.find({account_address:req.query.account_address})
-    .then((sel_lender) => {
-      console.log(sel_lender);
-      if(sel_lender === null)
-      {
-        res.status(401).json({message: "You have not funded any loan request"});
-      }
-      else if(sel_lender.funded_loans.length === 0)
-      {
-        res.status(401).json({message: "You have not funded any loan request"});
-      }
-      else{
-         res.status(201).json({ myfundings: sel_lender.funded_loans });
-      }
-    })
-    .catch((err) => {
-      console.log(3)
-      res.status(400).json({ message: err.message });
-    });
+  Lender.findOne({account_address:req.query.account_address})
+  .then((sel_lender) => {
+    console.log(sel_lender);
+    if(!sel_lender || !sel_lender.funded_loans || sel_lender.funded_loans.length === 0)
+    {
+      res.status(401).json({message: "You have not funded any loan request"});
+    }
+    else{
+       res.status(201).json({ myfundings: sel_lender.funded_loans });
+    }
+  })
+  .catch((err) => {
+    console.log(3)
+    res.status(401).json({ message: err.message });
+  });
 });
+
 module.exports = router;

@@ -2,30 +2,43 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import styles from "@/styles/MyProfile.module.css";
 import NavBar from "../components/NavBar";
+import Card from "../components/Card";
 
 function MyProfile() {
   return (
     <>
       <NavBar />
       <div className={styles.container}>
-        <h1 className={styles.title}>Welcome to Your Profile</h1>
+        {/* <h1 className={styles.title}>Welcome to Your Profile</h1> */}
 
-        <Link className={styles.button1} href="/signin">
-          Register your account!
-        </Link>
+        <Card
+          title="Register your account!"
+          description="Create an account to start using our platform."
+          href="/signin"
+          bgImage="path/to/register-image.jpg"
+        />
 
-        <Link className={styles.button1} href="/deposit">
-          Deposit Collateral
-        </Link>
+        <Card
+          title="Deposit Collateral"
+          description="Deposit collateral to secure your loans."
+          href="/deposit"
+          bgImage="path/to/deposit-image.jpg"
+        />
       </div>
       <div className={styles.container}>
-        <Link className={styles.button1} href="/myloans">
-          Get your Loan Requests
-        </Link>
+        <Card
+          title="Get your Loan Requests"
+          description="View and manage your loan requests."
+          href="/myloans"
+          bgImage="path/to/loan-requests-image.jpg"
+        />
 
-        <Link className={styles.button1} href="/myfundings">
-          Get your Funded Loans
-        </Link>
+        <Card
+          title="Get your Funded Loans"
+          description="View and manage your funded loans."
+          href="/myfundings"
+          bgImage="path/to/funded-loans-image.jpg"
+        />
       </div>
     </>
   );

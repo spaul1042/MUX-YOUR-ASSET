@@ -61,7 +61,6 @@ export default function Borrow() {
   return (
     <>
       <NavBar />
-      Place the Loan
       <div className={styles.borrow_form}>
         <div className={styles.prefix}> Account Address: </div>{" "}
         <input

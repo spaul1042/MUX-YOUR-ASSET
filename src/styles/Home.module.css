@@ -1,28 +1,10 @@
-.main {
-  margin: 2.5rem auto;
-  width:1300px;
-  height:690px;
-  padding: 10rem 4rem;
-  /* background-image: url("/radix.jpg"); */
-  background-position: top center;
-  background-repeat: no-repeat;
-  background-size: cover;
-
+.txt1{
+  color:black;
+  font-size: xx-large;
+  font-style:italic;
 }
-
-.h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.p {
-  font-size: 1.5rem;
-  line-height: 1.5;
-  margin-bottom: 1rem;
-}
-
-.connectbtn {
-  /* position: absolute; */
-  top: 1rem;
-  right: 1rem;
+.txt2{
+    color:black;
+   font-size:large;
+   font-style: oblique;
 }
