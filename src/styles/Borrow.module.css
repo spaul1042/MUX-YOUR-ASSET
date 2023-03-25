@@ -1,4 +1,7 @@
+
 .borrow_form {
+  background-color: #AAAAAA;
+  filter: brightness(0.8s);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,6 +13,7 @@
     padding: 0.5rem;
     border: none;
     border-radius: 0.5rem;
+    border-color: black;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   }
   
@@ -18,7 +22,7 @@
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 0.5rem;
-    background-color: #1a202c;
+    background-color: #0070f3;
     color: #fff;
     font-size: 1rem;
     cursor: pointer;
@@ -63,5 +67,9 @@
   }
   .prefix{
     margin:5px;
+
   }
-  
+  .prefix2{
+    margin:5px;
+    color:#f8f8f8;
+  }

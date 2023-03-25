@@ -99,7 +99,7 @@ export default function Lend() {
     let temp_selectedBorrowers = selectedBorrowers.map((a) => ({ ...a }));
 
     // calculating funding districution by risk optimization funding algorithm
-    amount;
+
     if (amount > total_amount) {
       amount = total_amount;
     }
@@ -151,7 +151,7 @@ export default function Lend() {
           Destination: selectedBorrowers[i].account_address,
         };
 
-        if (selectedBorrowers[i].currency_code == "XRP") {
+        if (selectedBorrowers[i].currency_code === "XRP") {
           send_token_tx = {
             TransactionType: "Payment",
             Account: formData.account_address,
@@ -168,9 +168,9 @@ export default function Lend() {
             }
             if (Object.keys(eventMessage.data).indexOf("signed") > -1) {
               // The `signed` property is present, true (signed) / false (rejected)
-
-              return eventMessage;
             }
+              return eventMessage;
+            
           })
           .then(({ created, resolved }) => {
             alert(created.refs.qr_png);
@@ -206,17 +206,13 @@ export default function Lend() {
               // handle successful operation
             } else {
               console.log("failure");
-              alert("LastLoan payment failed");
+              alert("Last Loan payment failed");
               // handle failed operation
             }
           });
       }
-      setloading(false);
     }
-
-    // alert3
-    alert("Success");
-    console.log("True4");
+    setloading(false);
   };
 
   useEffect(() => {
@@ -278,16 +274,18 @@ export default function Lend() {
           value={formData.loan_amount}
           onChange={handleChange}
         />
+        <div className={styles.btn}>
         <button className={styles.borrow_form__button} onClick={handleSubmit}>
           Fund The Selected Loans
         </button>
-        <p className={styles.prefix2}>
+        {/* <p className={styles.prefix2}>
           {" "}
           Filter Loans based on what currency code you want to lend{" "}
-        </p>
+        </p> */}
         <button className={styles.borrow_form__button} onClick={handleClick}>
-          Filter
+          Filter based on Currency Code!
         </button>
+        </div>
       </div>
 
       <div className={styles.borrowersContainer}>

@@ -50,6 +50,8 @@ router.post("/borrow", async (req, res) => {
               const loan = new Loan({
                 account_address: req.body.account_address,
                 currency_code: req.body.currency_code,
+                original_loan_amount: req.body.loan_amount,
+                penalty:0,
                 loan_amount: req.body.loan_amount,
                 loan_duration: req.body.loan_duration,
                 interest_rate: req.body.interest_rate,
@@ -214,10 +216,40 @@ router.post("/lend", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+// API Endpoint for paying back loan
+// >> {account_address, _id}  // change only the paid_or_not parameter of loan object with loan_id
+// C) Tested>> working
+
+router.post("/payback", async (req, res) => {
+  try {
+    // 1) Updating the Loan Model
+    const query1 = User.findOne({
+      account_address: req.body.account_address,
+    });
+
+    query1
+      .then(async (user) => {
+        if (!user) {
+          res.status(400).json({ message: "User not found" });
+        } else {
+          await Loan.updateOne(
+            { _id: req.body._id },
+            { $set: { paid_or_not: 1 } }
+          );
+          res.status(201).json({ message: "success" });
+      }
+    })
+      .catch((err) => {
+        res.status(400).json({ message: err.message });
+      });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 
 // API Endpoint for signing in and creating an object in the user Model
 // >> {account_address, name, password, collateral(empty array)}
-// C)  Tested >> Working
+// D)  Tested >> Working
 // without signin , you cannot deposit collateral
 
 router.post("/signin", async (req, res) => {
@@ -253,7 +285,7 @@ router.post("/signin", async (req, res) => {
 
 // API Endpoint for depositing collateral
 // >> {account_address, currency_code, collateral_amount}
-// D) tested >> working
+// E) tested >> working
 
 router.post("/deposit_collateral", async (req, res) => {
   try {
@@ -306,7 +338,7 @@ router.post("/deposit_collateral", async (req, res) => {
   }
 });
 
-// GET Requests API endpoint to get all loans placed on the platform 
+// GET Requests API endpoint to get all loans placed on the platform
 router.get("/loans", async (req, res) => {
   const query7 = Loan.find({});
 
@@ -321,99 +353,88 @@ router.get("/loans", async (req, res) => {
 
 // API endpoint to check whether an account address is registered or not!
 router.get("/check_register", async (req, res) => {
-
   console.log(req.query.account_address);
-  User.find({account_address:req.query.account_address})
+  User.find({ account_address: req.query.account_address })
     .then((user) => {
-      if(user === null)
-      {
-        console.log(2)
+      if (user === null) {
+        console.log(2);
         res.status(400).json({ message: "user not found" });
-      }
-      else if(user.length === 0)
-      {
-        console.log(2)
+      } else if (user.length === 0) {
+        console.log(2);
         res.status(400).json({ message: "user not found" });
+      } else {
+        console.log(1);
+        res.status(201).json({ message: "user found" });
       }
-      else{
-        console.log(1)
-        res.status(201).json({ message : "user found" })
-      }
-      
     })
     .catch((err) => {
-      console.log(3)
+      console.log(3);
       res.status(400).json({ message: err.message });
     });
 });
 
-
-// API Endpoint to filter loans based on currency code 
+// API Endpoint to filter loans based on currency code
 router.get("/selected_loans", async (req, res) => {
-
   console.log(req.query.currency_code);
-  Loan.find({currency_code:req.query.currency_code})
+  Loan.find({ currency_code: req.query.currency_code })
     .then((loans) => {
-      if(loans.length === 0)
-      {
-        res.status(401).json({message: "No loan found with the given currency code"});
-      }
-      else{
-      res.status(201).json({ loans: loans });
+      if (loans.length === 0) {
+        res
+          .status(401)
+          .json({ message: "No loan found with the given currency code" });
+      } else {
+        res.status(201).json({ loans: loans });
       }
     })
     .catch((err) => {
-      console.log(3)
+      console.log(3);
       res.status(400).json({ message: err.message });
     });
 });
-
 
 // API Endpoint to get all loan requests of an account address
 router.get("/myloans", async (req, res) => {
-
   console.log(req.query.account_address);
-  Loan.findOneAndDelete({account_address:req.query.account_address})
+  Loan.find({ account_address: req.query.account_address })
     .then((sel_loans) => {
-      if(sel_loans === null)
-      {
-        res.status(401).json({message: "error"});
-      }
-      else if(sel_loans.length === 0)
-      {
-        res.status(401).json({message: "You have not placed any loan request"});
-      }
-      else{
-         res.status(201).json({ myloans: sel_loans});
+      if (sel_loans === null) {
+        res.status(401).json({ message: "error" });
+      } else if (sel_loans.length === 0) {
+        res
+          .status(401)
+          .json({ message: "You have not placed any loan request" });
+      } else {
+        res.status(201).json({ myloans: sel_loans });
       }
     })
     .catch((err) => {
-      console.log(3)
+      console.log(3);
       res.status(401).json({ message: err.message });
     });
 });
 
-
-
 // API Endpoint to get all loans funded from an account address
 router.get("/myfundings", async (req, res) => {
-
   console.log(req.query.account_address);
-  Lender.findOne({account_address:req.query.account_address})
-  .then((sel_lender) => {
-    console.log(sel_lender);
-    if(!sel_lender || !sel_lender.funded_loans || sel_lender.funded_loans.length === 0)
-    {
-      res.status(401).json({message: "You have not funded any loan request"});
-    }
-    else{
-       res.status(201).json({ myfundings: sel_lender.funded_loans });
-    }
-  })
-  .catch((err) => {
-    console.log(3)
-    res.status(401).json({ message: err.message });
-  });
+  Lender.findOne({ account_address: req.query.account_address })
+    .then((sel_lender) => {
+      console.log(sel_lender);
+      if (
+        !sel_lender ||
+        !sel_lender.funded_loans ||
+        sel_lender.funded_loans.length === 0
+      ) {
+        res
+          .status(401)
+          .json({ message: "You have not funded any loan request" });
+      } else {
+        res.status(201).json({ myfundings: sel_lender.funded_loans });
+      }
+    })
+    .catch((err) => {
+      console.log(3);
+      res.status(401).json({ message: err.message });
+    });
 });
 
 module.exports = router;

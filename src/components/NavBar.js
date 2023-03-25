@@ -33,6 +33,9 @@ function NavBar() {
             src="/MUXUR.png"
             alt="First slide"
           />
+          <div className={styles.txt}>
+            MUX-UR-ASSET
+          </div>
           <li>
             <Link href="/">Home</Link>
           </li>

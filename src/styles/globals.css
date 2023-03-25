@@ -6,7 +6,7 @@
     'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
 
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 240, 240, 240; /* changed from 214, 219, 220 */
   --background-end-rgb: 255, 255, 255;
 
   --primary-glow: conic-gradient(
@@ -79,11 +79,7 @@
   margin: 0;
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -105,3 +101,10 @@ a {
     color-scheme: dark;
   }
 }
+
+/* html,
+body {
+  background-color: #AAAAAA;
+  max-width: 100vw;
+  overflow-x: hidden;
+} */

@@ -24,7 +24,7 @@ function Home() {
               alt="First slide"
             />
             <Carousel.Caption>
-              <h3 className={styles.txt1}>Welcome to MUX-UR-ASSET Platform</h3>
+              <h3>Welcome to MUX-UR-ASSET Platform</h3>
               <p className={styles.txt2}>
                 MUX-UR-ASSET is a decentralized P2P lending platform which
                 allows you to borrow and lend money without the need for a

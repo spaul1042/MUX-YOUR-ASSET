@@ -61,6 +61,7 @@ export default function Borrow() {
   return (
     <>
       <NavBar />
+      <div>
       <div className={styles.borrow_form}>
         <div className={styles.prefix}> Account Address: </div>{" "}
         <input
@@ -110,11 +111,11 @@ export default function Borrow() {
           value={formData.interest_rate}
           onChange={handleChange}
         />
-        <div className={styles.prefix}> Currency Code of Collateral:</div>{" "}
+        <div className={styles.prefix2}> Currency Code of Collateral:</div>{" "}
         <input
           type="text"
           className={styles.borrow_form__input}
-          placeholder="Enter amount to borrow"
+          placeholder="Enter Currency code of Collateral Staked"
           name="collateral_currency_code"
           value={formData.collateral_currency_code}
           onChange={handleChange}
@@ -122,6 +123,7 @@ export default function Borrow() {
         <button className={styles.borrow_form__button} onClick={handleSubmit}>
           Place a Loan Request
         </button>
+      </div>
       </div>
     </>
   );

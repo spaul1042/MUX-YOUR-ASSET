@@ -72,7 +72,7 @@ const Myfundings = () => {
             <p >Loan ID: {loan.loan_id}</p>
             <p >Funded Amount: {loan.funding_amount}</p>
             {loan.funding_amount > 0 ? (
-              <button className={styles.pay_button}>Get back</button>
+              <button className={styles.disabled_button} disabled>Get back</button>
             ) : (
               <button className={styles.disabled_button} disabled>
                 Get Back

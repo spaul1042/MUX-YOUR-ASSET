@@ -34,5 +34,12 @@
 }
 .img{
   margin-left: 10px;
-  margin-right:100px;
+  margin-right: 20px;
+}
+.txt{
+  font-style: oblique;
+  font-size: large;
+  font-weight: bold;
+  margin-right: 140px;
+  margin-top:5px;
 }
