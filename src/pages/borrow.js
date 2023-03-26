@@ -25,6 +25,15 @@ export default function Borrow() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (
+      formData.account_address.length != 34 ||
+      formData.account_address[0] != "r"
+    ) {
+      alert(
+        "Account Address Not valid, remove spaces/enter a valid account address of length 34"
+      );
+      return;
+    }
 
     // Check whether the borrower has the minimum reuired collateral amountor not for that collateral , if yes then proceed
 
@@ -62,68 +71,76 @@ export default function Borrow() {
     <>
       <NavBar />
       <div>
-      <div className={styles.borrow_form}>
-        <div className={styles.prefix}> Account Address: </div>{" "}
-        <input
-          type="string"
-          className={styles.borrow_form__input}
-          placeholder="Enter your account address"
-          name="account_address"
-          value={formData.account_address}
-          onChange={handleChange}
-        />
-        <div className={styles.prefix}> Loan Currency Code:</div>{" "}
-        <input
-          type="text"
-          className={styles.borrow_form__input}
-          placeholder="Enter Loan Currency Code"
-          name="currency_code"
-          value={formData.currency_code}
-          onChange={handleChange}
-        />
-        <div className={styles.prefix}> Loan Amount:</div>{" "}
-        <input
-          type="number"
-          step="1"
-          className={styles.borrow_form__input}
-          placeholder="Enter amount to borrow"
-          name="loan_amount"
-          value={formData.loan_amount}
-          onChange={handleChange}
-        />
-        <div className={styles.prefix}> Loan Duration in months: </div>
-        <input
-          type="number"
-          step="1"
-          className={styles.borrow_form__input}
-          placeholder="Enter Loan Duration"
-          name="loan_duration"
-          value={formData.loan_duration}
-          onChange={handleChange}
-        />
-        <div className={styles.prefix}> Rate of Interest:</div>{" "}
-        <input
-          type="number"
-          step="0.1"
-          className={styles.borrow_form__input}
-          placeholder="Enter Rate of interest"
-          name="interest_rate"
-          value={formData.interest_rate}
-          onChange={handleChange}
-        />
-        <div className={styles.prefix2}> Currency Code of Collateral:</div>{" "}
-        <input
-          type="text"
-          className={styles.borrow_form__input}
-          placeholder="Enter Currency code of Collateral Staked"
-          name="collateral_currency_code"
-          value={formData.collateral_currency_code}
-          onChange={handleChange}
-        />
-        <button className={styles.borrow_form__button} onClick={handleSubmit}>
-          Place a Loan Request
-        </button>
-      </div>
+        <div className={styles.borrow_form}>
+          <div className={styles.prefix}> Account Address: </div>{" "}
+          <input
+            type="string"
+            className={styles.borrow_form__input}
+            placeholder="Enter your account address"
+            name="account_address"
+            value={formData.account_address}
+            onChange={handleChange}
+          />
+          <div className={styles.prefix}> Loan Currency Code:</div>{" "}
+          <select
+            type="text"
+            className={styles.borrow_form__input2}
+            placeholder="Enter Loan Currency Code"
+            name="currency_code"
+            value={formData.currency_code}
+            onChange={handleChange}
+          >
+            <option value="XRP">XRP</option>
+            <option value="MUX">MUX</option>
+            <option value="XUM">XUM</option>
+          </select>
+          <div className={styles.prefix}> Loan Amount:</div>{" "}
+          <input
+            type="number"
+            step="1"
+            className={styles.borrow_form__input}
+            placeholder="Enter amount to borrow"
+            name="loan_amount"
+            value={formData.loan_amount}
+            onChange={handleChange}
+          />
+          <div className={styles.prefix}> Loan Duration in months: </div>
+          <input
+            type="number"
+            step="1"
+            className={styles.borrow_form__input}
+            placeholder="Enter Loan Duration"
+            name="loan_duration"
+            value={formData.loan_duration}
+            onChange={handleChange}
+          />
+          <div className={styles.prefix}> Rate of Interest:</div>{" "}
+          <input
+            type="number"
+            step="0.1"
+            className={styles.borrow_form__input}
+            placeholder="Enter Rate of interest"
+            name="interest_rate"
+            value={formData.interest_rate}
+            onChange={handleChange}
+          />
+          <div className={styles.prefix2}> Currency Code of Collateral:</div>{" "}
+          <select
+            type="text"
+            className={styles.borrow_form__input2}
+            placeholder="Enter Currency code of Collateral Staked"
+            name="collateral_currency_code"
+            value={formData.collateral_currency_code}
+            onChange={handleChange}
+          >
+            <option value="XRP">XRP</option>
+            <option value="MUX">MUX</option>
+            <option value="XUM">XUM</option>
+          </select>
+          <button className={styles.borrow_form__button} onClick={handleSubmit}>
+            Place a Loan Request
+          </button>
+        </div>
       </div>
     </>
   );

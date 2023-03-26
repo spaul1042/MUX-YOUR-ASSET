@@ -169,8 +169,7 @@ export default function Lend() {
             if (Object.keys(eventMessage.data).indexOf("signed") > -1) {
               // The `signed` property is present, true (signed) / false (rejected)
             }
-              return eventMessage;
-            
+            return eventMessage;
           })
           .then(({ created, resolved }) => {
             alert(created.refs.qr_png);
@@ -256,14 +255,20 @@ export default function Lend() {
           onChange={handleChange}
         />
         <div className={styles.prefix}> Loan Currency Code:</div>{" "}
-        <input
+
+        <select
           type="text"
-          className={styles.borrow_form__input}
+          className={styles.borrow_form__input2}
           placeholder="Enter Loan Currency Code"
           name="currency_code"
           value={formData.currency_code}
           onChange={handleChange}
-        />
+        >
+          <option value="XRP">XRP</option>
+          <option value="MUX">MUX</option>
+          <option value="XUM">XUM</option>
+        </select>
+
         <div className={styles.prefix}> Loan Amount:</div>{" "}
         <input
           type="number"
@@ -275,16 +280,16 @@ export default function Lend() {
           onChange={handleChange}
         />
         <div className={styles.btn}>
-        <button className={styles.borrow_form__button} onClick={handleSubmit}>
-          Fund The Selected Loans
-        </button>
-        {/* <p className={styles.prefix2}>
+          <button className={styles.borrow_form__button} onClick={handleSubmit}>
+            Fund The Selected Loans
+          </button>
+          {/* <p className={styles.prefix2}>
           {" "}
           Filter Loans based on what currency code you want to lend{" "}
         </p> */}
-        <button className={styles.borrow_form__button} onClick={handleClick}>
-          Filter based on Currency Code!
-        </button>
+          <button className={styles.borrow_form__button} onClick={handleClick}>
+            Filter based on Currency Code!
+          </button>
         </div>
       </div>
 

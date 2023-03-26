@@ -5,10 +5,12 @@
   text-align: center;
 }
 .form {
+  background-color: #AAAAAA;
     display: flex;
     flex-direction: column;
     max-width: 400px;
     margin: auto;
+    margin-top:100px;
   }
   
   .field {

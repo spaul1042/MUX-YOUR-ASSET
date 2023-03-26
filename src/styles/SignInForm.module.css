@@ -5,6 +5,7 @@
 }
 
 .form {
+  background-color: #AAAAAA;
   display: flex;
   flex-direction: column;
   max-width: 1000px;

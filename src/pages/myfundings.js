@@ -7,13 +7,17 @@ import NavBar from "../components/NavBar";
 const Myfundings = () => {
   const [accountAddress, setAccountAddress] = useState("");
   const [filteredLoans, setFilteredLoans] = useState([
-    { loan_id: "demo", funding_amount: 12 },
-    { loan_id: "demo", funding_amount: 0 },
-    { loan_id: "demo", funding_amount: 12 },
+
   ]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (accountAddress.length != 34 || accountAddress[0] != "r") {
+      alert(
+        "Account Address Not valid, remove spaces/enter a valid account address of length 34"
+      );
+      return;
+    }
 
     const response = await fetch(
       "http://localhost:8000/api/myfundings?" +

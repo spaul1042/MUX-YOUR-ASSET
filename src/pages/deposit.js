@@ -15,13 +15,20 @@ const Deposit = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (accountAddress.length != 34 || accountAddress[0] != "r") {
+      alert(
+        "Account Address Not valid, remove spaces/enter a valid account address of length 34"
+      );
+      return;
+    }
     const url = new URL("http://localhost:8000/api/check_register");
     url.searchParams.set("account_address", accountAddress);
 
     const chk_register_response = await fetch(
-     "http://localhost:8000/api/check_register?" + new URLSearchParams({
-        account_address: accountAddress
-    }),
+      "http://localhost:8000/api/check_register?" +
+        new URLSearchParams({
+          account_address: accountAddress,
+        }),
       {
         method: "GET",
         headers: {
@@ -72,7 +79,7 @@ const Deposit = () => {
       };
     }
 
-    //payload gets created with an event associated with it 
+    //payload gets created with an event associated with it
     xumm.payload
       .createAndSubscribe(send_token_tx, (eventMessage) => {
         if (Object.keys(eventMessage.data).indexOf("opened") > -1) {
@@ -136,9 +143,9 @@ const Deposit = () => {
   return (
     <>
       <NavBar />
-      
+
       <form onSubmit={handleSubmit} className={styles.form}>
-      <h2 className={styles.h2}> Deposit Collateral </h2>
+        <h2 className={styles.h2}> Deposit Collateral </h2>
         <div className={styles.field}>
           <label htmlFor="accountAddress" className={styles.label}>
             Account Address
@@ -156,14 +163,18 @@ const Deposit = () => {
           <label htmlFor="name" className={styles.label}>
             Currency Code
           </label>
-          <input
+          <select
             id="name"
             type="text"
             value={currency_code}
             onChange={(event) => setCode(event.target.value)}
             className={styles.input}
             required
-          />
+          >
+            <option value="XRP">XRP</option>
+            <option value="MUX">MUX</option>
+            <option value="XUM">XUM</option>
+          </select>
         </div>
         <div className={styles.field}>
           <label htmlFor="name" className={styles.label}>

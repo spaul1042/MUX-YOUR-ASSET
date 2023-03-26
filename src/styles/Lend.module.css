@@ -14,6 +14,14 @@
   border-radius: 0.5rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
+.borrow_form__input2 {
+  width:170px;
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
 
 .borrow_form__button {
   margin: 1.0rem;

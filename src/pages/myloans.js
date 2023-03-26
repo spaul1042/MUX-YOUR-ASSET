@@ -12,6 +12,12 @@ const Myloans = () => {
 
   const payback = async (_id, interest_rate, funders, currency_code) => {
     // setloading(true);
+    if (accountAddress.length != 34 || accountAddress[0] != "r") {
+      alert(
+        "Account Address Not valid, remove spaces/enter a valid account address of length 34"
+      );
+      return;
+    }
     const xumm = new Xumm("9f7539a1-f077-4098-8fee-dfc371769a15");
 
     const issuer_account = "r9ipnvUgT4ZYVbiNib4sLCzJ3RGzxfXp6y";
@@ -97,6 +103,12 @@ const Myloans = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (accountAddress.length != 34 || accountAddress[0] != "r") {
+      alert(
+        "Account Address Not valid, remove spaces/enter a valid account address of length 34"
+      );
+      return;
+    }
     setloading(true);
     // returns an array of loan objects
     const response = await fetch(
