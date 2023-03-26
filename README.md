@@ -73,3 +73,5 @@ sEdSLd9Xz8qpvdnJEMX3qWjYukSfHdD
 
 4) As a lender, there is no need to register your account, simply filter loans according to which currency code you want to fund and finally fund a bucket of chosen loans after which you have to sign a series of payment transactions to all the borrowers you wanna fund. The lender can also track funded loans.
 
+5) As of now there are only 3 tokens you can use for lending/borrowing >> XRP, MUX, XUM.
+
