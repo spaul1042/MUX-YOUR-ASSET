@@ -65,8 +65,11 @@ sEdSLd9Xz8qpvdnJEMX3qWjYukSfHdD
 # More on how to test the platform!
 
 ## Points to Note 
-i) As a borrower, you have to register your account, without which you cannot borrow or place a loan request
-ii) As a borrower, you have to deposit sufficient collateral to borrow. All three tokens (MUX, XRP, XUM) are considered of same value, this means that if you want to borrow x amount of token A using some staked collateral of token B, then your collateral balance for token B must be greater than equal to x, when you dpeosit collateral , XRP transaction will happeen , and you will have to transfer collateral token to  teh server account ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS.
-iii) Once your account address is registered and you have sufficient collateral balance, you can place and track any loan requests. ALso , you can pay back a loan after which you have to sign a series of payment transactions to all the funders of your loan. 
-iv) As a lender, there is no need to register your account, simply filter loans according to which currency code you want to fund and finally fund a bucket of chosen loans after which you have to sign a series of payment transactions to all the borrowers you wanna fund. The lender can also track funded loans.
+1) As a borrower, you have to register your account, without which you cannot borrow or place a loan request
+
+2) As a borrower, you have to deposit sufficient collateral to borrow. All three tokens (MUX, XRP, XUM) are considered of same value, this means that if you want to borrow x amount of token A using some staked collateral of token B, then your collateral balance for token B must be greater than equal to x, when you dpeosit collateral , XRP transaction will happeen , and you will have to transfer collateral token to  teh server account ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS.
+
+3) Once your account address is registered and you have sufficient collateral balance, you can place and track any loan requests. ALso , you can pay back a loan after which you have to sign a series of payment transactions to all the funders of your loan. 
+4) 
+5) As a lender, there is no need to register your account, simply filter loans according to which currency code you want to fund and finally fund a bucket of chosen loans after which you have to sign a series of payment transactions to all the borrowers you wanna fund. The lender can also track funded loans.
 
