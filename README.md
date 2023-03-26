@@ -9,9 +9,9 @@ Open the project and head on to the root directory where src and server director
 1) Create a free MongoDb cluster on MongoDb Atlas and get the cluster link to connect it with mongoDb Compass/mongoose
 2) Follow [MongoDb Atlas](https://www.mongodb.com/cloud/atlas/register) to get the link of your free cluster on MongoDb Atlas
 3) Make sure that your username and password present in the cluster link is url encoded, please follow MongoDb Atlas for any problem
-4) Once you have the cluster link, inside the server directory, create a .env file, and inside the .env file, store your MongoDb cluster link as:
+4) Once you have the cluster link, inside the server directory, create a .env file, and inside the .env file, store your MongoDb cluster link with the name DATABASE_URL as a string :
 ```
-DATABASE_URL = {mongoDb cluster url}
+DATABASE_URL = "mongoDb cluster url"
 ```
 
 5)Inside a new terminal type these commands:
