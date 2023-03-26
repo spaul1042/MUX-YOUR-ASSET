@@ -1,8 +1,8 @@
 This is a decentralized P2P Lending platform aka MUX-UR-ASSET
 
-#Getting Started
+# Getting Started
 
-##***First of all we will setup the server or the database which is built using mongoose and mongoDb.***
+## ***First of all we will setup the server or the database which is built using mongoose and mongoDb.***
 
 Open the project and head on to the root directory where src and server directories are present
 
@@ -23,7 +23,7 @@ npm start
 This will start the server at port 8000
 
 
-##***Now when your server is running, its time to setup the frontend or client side:***
+## ***Now when your server is running, its time to setup the frontend or client side:***
 
 1)Open a new terminal and in the root directory of the project where src is present, run these command:
 ```
