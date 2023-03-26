@@ -1,38 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a decentralized P2P Lending platform aka MUX-UR-ASSET
 
-## Getting Started
+##Getting Started
 
-First, run the development server:
+##***First of all we will setup the server or the database which is built using mongoose and mongoDb.***
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+Open the project and head on to the root directory where src and server directories are present
+
+1) Create a free MongoDb cluster on MongoDb Atlas and get the cluster link to connect it with mongoDb Compass/mongoose
+2) Follow [MongoDb Atlas](https://www.mongodb.com/cloud/atlas/register) to get the link of your free cluster on MongoDb Atlas
+3) Make sure that your username and password present in the cluster link is url encoded, please follow MongoDb Atlas for any problem
+4) Once you have the cluster link, inside the server directory, create a .env file, and inside the .env file, store your MongoDb cluster link as:
+```
+DATABASE_URL = {mongoDb cluster url}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5)
+Inside a new terminal type these commands:
+```
+cd server
+npm install
+npm start
+```
+This will start the server at port 8000
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+##***Now when your server is running, its time to setup the frontend or client side:***
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+1)Open a new terminal and in the root directory of the project where src is present, run these command:
+```
+npm install
+npm run dev
+```
+This will start the client side server running on port 3000
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2) Note that to make things easy and for testing this project, we have provided account details of four account addresses, add these four account addresses on XUMM wallet and start using the project by lending and borrowing in XRP/MUX/XUM tokens using these addresses
 
-## Learn More
+***
 
-To learn more about Next.js, take a look at the following resources:
+1) ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS  (Test)  (The server account, where collateral is stored and for intermediary purposes)
+ED5324521054D7FE75DC4039E88F9269ED60568F771C5DD64FEBAD3998ECFF0513
+ED38E0A445B866CF83A26FD030969804096019C717F9F28A0668374B21ACAD96AD
+sEdVaEKAzKb9YL5aanH4VnSxMbtj82y
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2) rM4Dt8ic5T2uzDQvKayYYBNbEUe54j6T6c  (Test2)  (User Test Account 1)
+EDA05B172A3A571681FDE9A5C8D3431F7E42C6693F49E6BD03071F351CD2299529
+ED7C37A2088209E5C4779BDAF9289FE7E3C1AAFAD5EDF7167D74FCD54FA1CBFC8F
+sEdTam4kJgxpCfB5apkPqXoT8YaQJdw
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3) rMERCdZG8Co3yqmcvsUk563QMFDyVU3BnF (Test3)  (User Test Account 2)
+ED27729720311C4EF205C39AB57F0B905749A3B786C3E0F53A524488675E9B84B5
+EDDC6173E82230C064B7B33E6D5C2DB306E31FD7236084D8B8E5F2A067AC8E5CEF
+sEdTskLnmN6XVoQVsyUYF7E7gXLiEQx
 
-## Deploy on Vercel
+4) rph8nukqhbkdRLk2L7XcrzM49uMgMNm47M (Test4)  (User Test Account 3)
+ED3DB98CC3B3490AF561A6ADC6E8B387F042F0625F00A8CFDEED14512A1E4BFA2B
+EDD19CD64658938BDA0F6C43A9C019FC81D9DCD920789443F43CCAD6975C6FCD34
+sEdSLd9Xz8qpvdnJEMX3qWjYukSfHdD
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+***
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+3) Also dont change the server and client port numbers >> 8000 and 3000 respectively
+
+
+# More on how to test the platform!
+
+## Points to Note 
+i) As a borrower, you have to register your account, without which you cannot borrow or place a loan request
+ii) As a borrower, you have to deposit sufficient collateral to borrow. All three tokens (MUX, XRP, XUM) are considered of same value, this means that if you want to borrow x amount of token A using some staked collateral of token B, then your collateral balance for token B must be greater than equal to x, when you dpeosit collateral , XRP transaction will happeen , and you will have to transfer collateral token to  teh server account ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS.
+iii) Once your account address is registered and you have sufficient collateral balance, you can place and track any loan requests. ALso , you can pay back a loan after which you have to sign a series of payment transactions to all the funders of your loan. 
+iv) As a lender, there is no need to register your account, simply filter loans according to which currency code you want to fund and finally fund a bucket of chosen loans after which you have to sign a series of payment transactions to all the borrowers you wanna fund. The lender can also track funded loans.
+
