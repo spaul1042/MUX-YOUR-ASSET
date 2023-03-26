@@ -14,7 +14,7 @@ Open the project and head on to the root directory where src and server director
 DATABASE_URL = "mongoDb cluster url"
 ```
 
-5)Inside a new terminal type these commands:
+5) Inside a new terminal type these commands:
 ```
 cd server
 npm install
@@ -25,7 +25,7 @@ This will start the server at port 8000
 
 ## ***Now when your server is running, its time to setup the frontend or client side:***
 
-1)Open a new terminal and in the root directory of the project where src is present, run these command:
+1) Open a new terminal and in the root directory of the project where src is present, run these command:
 ```
 npm install
 npm run dev
@@ -70,6 +70,6 @@ sEdSLd9Xz8qpvdnJEMX3qWjYukSfHdD
 2) As a borrower, you have to deposit sufficient collateral to borrow. All three tokens (MUX, XRP, XUM) are considered of same value, this means that if you want to borrow x amount of token A using some staked collateral of token B, then your collateral balance for token B must be greater than equal to x, when you dpeosit collateral , XRP transaction will happeen , and you will have to transfer collateral token to  teh server account ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS.
 
 3) Once your account address is registered and you have sufficient collateral balance, you can place and track any loan requests. ALso , you can pay back a loan after which you have to sign a series of payment transactions to all the funders of your loan. 
-4) 
-5) As a lender, there is no need to register your account, simply filter loans according to which currency code you want to fund and finally fund a bucket of chosen loans after which you have to sign a series of payment transactions to all the borrowers you wanna fund. The lender can also track funded loans.
+
+4) As a lender, there is no need to register your account, simply filter loans according to which currency code you want to fund and finally fund a bucket of chosen loans after which you have to sign a series of payment transactions to all the borrowers you wanna fund. The lender can also track funded loans.
 
