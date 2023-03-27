@@ -256,18 +256,18 @@ export default function Lend() {
         />
         <div className={styles.prefix}> Loan Currency Code:</div>{" "}
 
-        <select
+        <input
           type="text"
           className={styles.borrow_form__input2}
           placeholder="Enter Loan Currency Code"
           name="currency_code"
           value={formData.currency_code}
           onChange={handleChange}
-        >
-          <option value="XRP">XRP</option>
+        />
+          {/* <option value="XRP">XRP</option>
           <option value="MUX">MUX</option>
           <option value="XUM">XUM</option>
-        </select>
+        </input> */}
 
         <div className={styles.prefix}> Loan Amount:</div>{" "}
         <input

@@ -81,19 +81,19 @@ export default function Borrow() {
             onChange={handleChange}
           />
           <div className={styles.prefix}> Loan Currency Code:</div>{" "}
-          <select
+          <input
             type="text"
             className={styles.borrow_form__input2}
             placeholder="Enter Loan Currency Code"
             name="currency_code"
             value={formData.currency_code}
             onChange={handleChange}
-          >
-            <option value="XRP">XRP</option>
+          />
+            {/* <option value="XRP">XRP</option>
             <option value="MUX">MUX</option>
             <option value="XUM">XUM</option>
-          </select>
-          <div className={styles.prefix}> Loan Amount:</div>{" "}
+          </> */}
+                <div className={styles.prefix}> Loan Amount:</div>{" "}
           <input
             type="number"
             step="1"
@@ -124,18 +124,18 @@ export default function Borrow() {
             onChange={handleChange}
           />
           <div className={styles.prefix2}> Currency Code of Collateral:</div>{" "}
-          <select
+          <input
             type="text"
             className={styles.borrow_form__input2}
             placeholder="Enter Currency code of Collateral Staked"
             name="collateral_currency_code"
             value={formData.collateral_currency_code}
             onChange={handleChange}
-          >
-            <option value="XRP">XRP</option>
+          />
+            {/* <option value="XRP">XRP</option>
             <option value="MUX">MUX</option>
             <option value="XUM">XUM</option>
-          </select>
+          </input> */}
           <button className={styles.borrow_form__button} onClick={handleSubmit}>
             Place a Loan Request
           </button>

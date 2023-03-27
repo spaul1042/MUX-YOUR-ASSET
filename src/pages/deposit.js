@@ -163,18 +163,18 @@ const Deposit = () => {
           <label htmlFor="name" className={styles.label}>
             Currency Code
           </label>
-          <select
+          <input
             id="name"
             type="text"
             value={currency_code}
             onChange={(event) => setCode(event.target.value)}
             className={styles.input}
             required
-          >
-            <option value="XRP">XRP</option>
+          />
+            {/* <option value="XRP">XRP</option>
             <option value="MUX">MUX</option>
             <option value="XUM">XUM</option>
-          </select>
+          </input> */}
         </div>
         <div className={styles.field}>
           <label htmlFor="name" className={styles.label}>
