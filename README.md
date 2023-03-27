@@ -65,7 +65,7 @@ sEdSLd9Xz8qpvdnJEMX3qWjYukSfHdD
 # More on how to test the platform!
 
 ## Points to Note
-1) Make sure you connect your wallet before doing anything on the platform, otherwise your transaactions or requests or interaction would have no value and  the intercations will go NULL and Void.
+1) Make sure you connect your wallet before doing anything on the platform, otherwise your transactions or requests or interaction would have no value and  the intercations will go NULL and Void. To disconnect, there is no direct way, you have to clear your browsing history and connect again.
 
 2) To connect wallet, there is a connect button on the top left corner of the navbar. If your wallet is already connected , then after clicking on connect button , disconnect will appear on the same button and if your account is not connected, you will be redirected to a qrscan for authentication.
 
@@ -79,3 +79,10 @@ sEdSLd9Xz8qpvdnJEMX3qWjYukSfHdD
 
 7) As of now there are only 3 tokens you can use for lending/borrowing >> XRP, MUX, XUM.
 
+
+
+# Potential Vulnerabilities and Improvements
+
+1) Whether transactions are signed or rejected, is partially monitored, there are few places where we have to further audit and improve
+2) Cross Currency Paymnent integration using DEX/XRP inbuilt DEX
+3) We are open to anyone who can suggest a security vulnerability issue, we will be happt to fix it.
