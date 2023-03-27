@@ -14,14 +14,16 @@ export default function Lend() {
   const [filteredBorrowers, setFilteredBorrowers] = useState([]); // filtered loans
   const [selectedBorrowers, setSelectedBorrowers] = useState([]); // selected loans by the lender whom he/she wants to lend
 
-  const toggleBorrowerSelection = (borrower) => {
+  const toggleBorrowerSelection = async (borrower) => {
+    console.log("BEFORE TOGGLING", selectedBorrowers.length);
     if (selectedBorrowers.includes(borrower)) {
-      setSelectedBorrowers(
+        setSelectedBorrowers(
         selectedBorrowers.filter((curr_borrower) => curr_borrower != borrower)
       );
     } else {
-      setSelectedBorrowers([...selectedBorrowers, borrower]);
+       setSelectedBorrowers([...selectedBorrowers, borrower]);
     }
+    console.log("AFTER TOGGLING", selectedBorrowers.length);
   };
   const [formData, setFormData] = useState({
     account_address: "",
@@ -35,6 +37,7 @@ export default function Lend() {
   };
 
   const handleClick = async () => {
+    setSelectedBorrowers([]);
     const response = await fetch(
       "http://localhost:8000/api/selected_loans?" +
         new URLSearchParams({
@@ -61,6 +64,7 @@ export default function Lend() {
     } else {
       return;
     }
+    console.log(selectedBorrowers);
   };
 
   const handleSubmit = async (event) => {
