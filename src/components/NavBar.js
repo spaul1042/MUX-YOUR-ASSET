@@ -20,21 +20,21 @@ function NavBar() {
 
   };
 
-  const disconnect = async function () {
+  // const disconnect = async function () {
 
-    const xumm = new Xumm("9f7539a1-f077-4098-8fee-dfc371769a15", {
-      implicit: true, 
-      redirectUrl: document.location.href + '?custom_state=test'// Implicit: allows to e.g. move from social browser to stock browser
-      // redirectUrl: document.location.href + '?custom_state=test'
-    });
+  //   const xumm = new Xumm("9f7539a1-f077-4098-8fee-dfc371769a15", {
+  //     implicit: true, 
+  //     redirectUrl: document.location.href + '?custom_state=test'// Implicit: allows to e.g. move from social browser to stock browser
+  //     // redirectUrl: document.location.href + '?custom_state=test'
+  //   });
     
-    console.log("Before logging out");
-    await xumm.logout();
-    console.log("logged out");
+  //   console.log("Before logging out");
+  //   await xumm.logout();
+  //   console.log("logged out");
 
-    setConnected(false);
+  //   setConnected(false);
   
-  };
+  // };
 
 
   useEffect(() => {
@@ -47,24 +47,28 @@ function NavBar() {
       // redirectUrl: document.location.href + '?custom_state=test'
     });
 
-    xumm.on("error", (error) => {
-      console.log("error", error);
-    });
+    // xumm.on("error", (error) => {
+    //   console.log("error", error);
+    // });
 
     xumm.on("success", async () => {
+      // the asycn function is called when the authentication/login is successful which fetches account address and sets it.
       xumm.user.account.then(account => {
         setAddress(account);
         setConnected(true);
       })
     });
     
-    xumm.on("retrieved", async () => {
-      xumm.user.account.then(account => {
-        console.log("refreshed visit")
-        setAddress(account);
-        setConnected(true);
-      })
-    });
+    // xumm.on("retrieved", async () => {
+    //   // this async function is called, when the user tries to retrieve the xumm api data, for example if the user is connected 
+    //   // async function >> xumm.user.account.then returns the account address as a promise
+    //   // xumm.user.account.then(account => {
+    //   //   console.log("refreshed visit")
+    //   //   setAddress(account);
+    //   //   setConnected(true);
+    //   // })
+    //   setConnected(true);
+    // });
 
     setloading(false);
     // return () => {
@@ -109,7 +113,7 @@ function NavBar() {
         </ul>
 
         <div className={styles.connectbtn}>
-          {connected? <button onClick={disconnect} > Disconnect Wallet </button>
+          {connected? <button disabled > Disconnect Wallet </button>
           : <button onClick={connect}> Connect Wallet </button>}
           
         </div>

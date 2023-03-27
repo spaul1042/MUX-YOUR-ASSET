@@ -61,13 +61,13 @@ const SignInForm = () => {
       });
     });
 
-    xumm.on("retrieved", async () => {
-      xumm.user.account.then((account) => {
-        console.log("inside signin");
-        setAccountAddress(account);
-        setConnected(true);
-      });
-    });
+    // xumm.on("retrieved", async () => {
+    //   xumm.user.account.then((account) => {
+    //     console.log("inside signin");
+    //     setAccountAddress(account);
+    //     setConnected(true);
+    //   });
+    // });
 
     // setloading(false);
   }, [accountAddress]);

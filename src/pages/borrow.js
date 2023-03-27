@@ -7,7 +7,6 @@ import { Xumm } from "xumm";
 
 export default function Borrow() {
   const [loading, setloading] = useState(true);
-
   const [formData, setFormData] = useState({
     account_address: "",
     currency_code: "",
