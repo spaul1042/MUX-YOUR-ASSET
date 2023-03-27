@@ -64,14 +64,18 @@ sEdSLd9Xz8qpvdnJEMX3qWjYukSfHdD
 
 # More on how to test the platform!
 
-## Points to Note 
-1) As a borrower, you have to register your account, without which you cannot borrow or place a loan request
+## Points to Note
+1) Make sure you connect your wallet before doing anything on the platform, otherwise your transaactions or requests or interaction would have no value and  the intercations will go NULL and Void.
 
-2) As a borrower, you have to deposit sufficient collateral to borrow. All three tokens (MUX, XRP, XUM) are considered of same value, this means that if you want to borrow x amount of token A using some staked collateral of token B, then your collateral balance for token B must be greater than equal to x, when you dpeosit collateral , XRP transaction will happeen , and you will have to transfer collateral token to  teh server account ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS.
+2) To connect wallet, there is a connect button on the top left corner of the navbar. If your wallet is already connected , then after clicking on connect button , disconnect will appear on the same button and if your account is not connected, you will be redirected to a qrscan for authentication.
 
-3) Once your account address is registered and you have sufficient collateral balance, you can place and track any loan requests. ALso , you can pay back a loan after which you have to sign a series of payment transactions to all the funders of your loan. 
+3) As a borrower, you have to register your account, without which you cannot borrow or place a loan request
 
-4) As a lender, there is no need to register your account, simply filter loans according to which currency code you want to fund and finally fund a bucket of chosen loans after which you have to sign a series of payment transactions to all the borrowers you wanna fund. The lender can also track funded loans.
+4) As a borrower, you have to deposit sufficient collateral to borrow. All three tokens (MUX, XRP, XUM) are considered of same value, this means that if you want to borrow x amount of token A using some staked collateral of token B, then your collateral balance for token B must be greater than equal to x, when you dpeosit collateral , XRP transaction will happeen , and you will have to transfer collateral token to  teh server account ra26ykT87BwwEriSdyoMbDcKPdaNpRnaoS.
 
-5) As of now there are only 3 tokens you can use for lending/borrowing >> XRP, MUX, XUM.
+5) Once your account address is registered and you have sufficient collateral balance, you can place and track any loan requests. ALso , you can pay back a loan after which you have to sign a series of payment transactions to all the funders of your loan. 
+
+6) As a lender, there is no need to register your account, simply filter loans according to which currency code you want to fund and finally fund a bucket of chosen loans after which you have to sign a series of payment transactions to all the borrowers you wanna fund. The lender can also track funded loans.
+
+7) As of now there are only 3 tokens you can use for lending/borrowing >> XRP, MUX, XUM.
 
